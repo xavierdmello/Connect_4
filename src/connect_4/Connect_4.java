@@ -13,92 +13,164 @@ import java.util.Scanner;
 public class Connect_4
 {
     public static void main(String[] args) throws InterruptedException {
+        int menuChoice = 0;
+        int gameMode = 1; // 1=PvP, 2=PvCPU
+        int numRows = 6;
+        int numColumns = 7;
         String playAgain = "Y";
         Scanner myInput = new Scanner(System.in);
 
-        System.out.println("|| Connect 4 ||");
+        menuChoice = getMenuChoice();
+        System.out.println(menuChoice);
+        // Start Game (with specific board size and game mode)
+        if (menuChoice == 1) {
+            startGame(numRows, numColumns, gameMode);
 
-        while (playAgain.equals("Y")) {
-
-            // Init variables
-            int numRows = 6;
-            int numColumns = 7;
-            int gameMode; // 1=PvP, 2=PvCPU
-            int p1WinStreak = 0;
-            int p2WinStreak = 0;
-            int cpuWinStreak = 0;
-            String p1Character = "";
-            String p2Character = "";
-            String cpuCharacter = "";
-
-            String turn = "X";
-            String winner = "none";
-            String[][] board = new String[numRows][numColumns];
-
-            // Get game mode choice
-            Object[] settings = setupGame();
-            gameMode = (int)(settings[0]);
-            p1Character = (String)(settings[1]);
-            p2Character = (String)(settings[2]);
-            cpuCharacter = (String)(settings[3]);
-
-            // Empty game board
-            board = emptyBoard(board);
-
-            // Main gameplay loop
-            while (winner != "X" && winner != "O") {
-                printBoard(board);
-
-                if (turn.equals("X")) {
-                    board = placeDisc(board, gameMode, turn);
-                    turn = "O";
-                } else {
-                    board = placeDisc(board, gameMode, turn);
-                    turn = "X";
-                }
-
-                winner = checkIfWin(board);
-            }
-
-            // Determine winner and display any win streaks
-            if (p1Character.equals(winner)) {
-                System.out.println("Congratulations! Player 1 Wins!");
-                p1WinStreak++;
-                p2WinStreak = 0;
-                cpuWinStreak = 0;
-            } else if (p2Character.equals(winner)) {
-                System.out.println("Congratulations! Player 2 Wins!");
-                p2WinStreak++;
-                p1WinStreak = 0;
-                cpuWinStreak = 0;
-            } else {
-                System.out.println("CPU Wins. Womp, womp.");
-                cpuWinStreak++;
-                p1WinStreak = 0;
-                p2WinStreak = 0;
-            }
-
-            Thread.sleep(2000);
-            printWinStreaks(p1WinStreak, p2WinStreak, cpuWinStreak);
-            Thread.sleep(2000);
-
-            // TODO: Change "win streaks" to leaderboard instead
             // TODO: Add game timer (ex: at the end of game, print "Game Length: 5:46")
+        }
+        // View Leaderboard
+        else if (menuChoice == 2) {
+            // TODO: Change "win streaks" to leaderboard instead
+        }
+        // Exit
+        else if (menuChoice == 4) {
 
-            // See if user wants to play again
-            while (true) {
-                System.out.println("Would you like to play again? (Y/N)");
-                playAgain = myInput.next().toUpperCase();
+        }
+        // Change Game Mode
+        else if (menuChoice == 5) {
 
-                if (!playAgain.equals("Y") && !playAgain.equals("N")) {
+        }
+        // Change Board Width
+        else if (menuChoice == 6) {
+
+        }
+        // Change Board Height
+        else if (menuChoice == 7) {
+
+        }
+        // Change number of discs-in-a-row needed to win
+        else if (menuChoice == 8) {
+
+        }
+        else {
+            System.out.println("Error");
+        }
+    } // end main()
+
+    // Print game options
+    // Returns user's selection
+    public static int getMenuChoice()
+    {
+        Scanner myInput = new Scanner(System.in);
+        int menuChoice = 0;
+
+        while (true) {
+            try {
+                System.out.println("|| Connect 4 ||");
+                System.out.println("1: Start Game\n2: View Leaderboard\n3: Change Settings\n4: Exit");
+                System.out.println("Enter your choice: ");
+                menuChoice = myInput.nextInt();
+
+                if (menuChoice == 3) {
+
+                    while (true) {
+                        try {
+                            System.out.println("|| Settings ||");
+                            System.out.println("1: Change Game Mode\n2: Change Board Width\n3: Change Board Height\n4: Change number of discs-in-a-row needed to win\n5: Go back");
+                            System.out.println("Enter your choice: ");
+
+                            menuChoice = myInput.nextInt() + 4;
+
+                            if (menuChoice < 5 || menuChoice > 9) {
+                                System.out.println("Invalid Input.");
+                            }
+                            else if (menuChoice == 9) {
+                                break;
+                            }
+                            else {
+                                return menuChoice;
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid Input.");
+                            myInput.nextLine();
+                        }
+                    }
+                }
+                else if (menuChoice > 4 || menuChoice < 1) {
                     System.out.println("Invalid Input.");
-                } else {
+                }
+                else {
                     break;
                 }
-            } // end "See if user wants to play again" loop
-        } // end program loop
-    } // end main()
-    
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid Input");
+                myInput.nextLine();
+            }
+        }
+
+        return menuChoice;
+    }
+
+    public static void startGame(int numRows, int numColumns, int gameMode) throws InterruptedException {
+        // Init variables
+        int p1WinStreak = 0;
+        int p2WinStreak = 0;
+        int cpuWinStreak = 0;
+        String p1Character = "";
+        String p2Character = "";
+        String cpuCharacter = "";
+
+        String turn = "X";
+        String winner = "none";
+        String[][] board = new String[numRows][numColumns];
+
+        // Get game mode choice
+        Object[] settings = setupGame();
+        gameMode = (int)(settings[0]);
+        p1Character = (String)(settings[1]);
+        p2Character = (String)(settings[2]);
+        cpuCharacter = (String)(settings[3]);
+
+        // Empty game board
+        board = emptyBoard(board);
+
+        // Main gameplay loop
+        while (winner != "X" && winner != "O") {
+            printBoard(board);
+
+            if (turn.equals("X")) {
+                board = placeDisc(board, gameMode, turn);
+                turn = "O";
+            } else {
+                board = placeDisc(board, gameMode, turn);
+                turn = "X";
+            }
+
+            winner = checkIfWin(board);
+        }
+
+        // Determine winner and display any win streaks
+        if (p1Character.equals(winner)) {
+            System.out.println("Congratulations! Player 1 Wins!");
+            p1WinStreak++;
+            p2WinStreak = 0;
+            cpuWinStreak = 0;
+        } else if (p2Character.equals(winner)) {
+            System.out.println("Congratulations! Player 2 Wins!");
+            p2WinStreak++;
+            p1WinStreak = 0;
+            cpuWinStreak = 0;
+        } else {
+            System.out.println("CPU Wins. Womp, womp.");
+            cpuWinStreak++;
+            p1WinStreak = 0;
+            p2WinStreak = 0;
+        }
+
+        Thread.sleep(2000);
+        printWinStreaks(p1WinStreak, p2WinStreak, cpuWinStreak);
+        Thread.sleep(2000);
+    }
     // Prints out Connect 4 board
     public static void printBoard(String[][] board)
     {
