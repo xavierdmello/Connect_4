@@ -7,8 +7,6 @@
 
 package connect_4;
 
-import jdk.internal.util.xml.impl.Input;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -254,7 +252,9 @@ public class Connect_4
         Object[] settings = selectPlayers();
         p1Character = (String)(settings[0]);
         p2Character = (String)(settings[1]);
-        cpuCharacter = (String)(settings[2]);
+        if (gameMode == 2) {
+            cpuCharacter = (String)(settings[2]);
+        }
 
         // Empty game board
         board = emptyBoard(board);
@@ -265,13 +265,24 @@ public class Connect_4
         // Main gameplay loop
         while (winner != "X" && winner != "O") {
             printBoard(board, discsNeededToWin);
+            System.out.println(cpuCharacter);
 
             if (turn.equals("X")) {
-                board = placeDisc(board, gameMode, turn);
-                turn = "O";
+                if (cpuCharacter == "X") {
+                    board = AI.placeDisc(board, turn, discsNeededToWin);
+                    turn = "O";
+                } else {
+                    board = placeDisc(board, gameMode, turn);
+                    turn = "O";
+                }
             } else {
-                board = placeDisc(board, gameMode, turn);
-                turn = "X";
+                if (cpuCharacter == "O") {
+                    board = AI.placeDisc(board, turn, discsNeededToWin);
+                    turn = "X";
+                } else {
+                    board = placeDisc(board, gameMode, turn);
+                    turn = "X";
+                }
             }
 
             winner = checkIfWin(board, discsNeededToWin);
@@ -319,6 +330,7 @@ public class Connect_4
 //        printWinStreaks(p1Win2Streak, p2WinStreak, cpuWinStreak);
 //        Thread.sleep(2000);
     }
+
     // Prints out Connect 4 board
     public static void printBoard(String[][] board, int discsNeededToWin)
     {
@@ -326,9 +338,9 @@ public class Connect_4
         System.out.println("\n|-----Connect " + discsNeededToWin + "-----|");
 
         // TODO: Remove following debug code
-        int xHighestScoreInBoard = Ai.calculateHighestScoreInBoard(board,"X", discsNeededToWin);
+        int xHighestScoreInBoard = AI.calculateHighestScoreInBoard(board,"X", discsNeededToWin);
         System.out.println("X's highest score in board: " + xHighestScoreInBoard);
-        int oHighestScoreInBoard = Ai.calculateHighestScoreInBoard(board,"O", discsNeededToWin);
+        int oHighestScoreInBoard = AI.calculateHighestScoreInBoard(board,"O", discsNeededToWin);
         System.out.println("O's highest score in board: " + oHighestScoreInBoard);
 
         System.out.println();
@@ -454,6 +466,11 @@ public class Connect_4
 
         return board;
     } // end placeDisc()
+
+    public static String[][] calculatePieceFall(String[][] board, int gameMode, String turn)
+    {
+
+    }
 
     // Check if anybody has won
     // Returns winner (or an empty string if there is no winner)
