@@ -4,14 +4,14 @@ import java.util.Arrays;
 
 public class Ai
 {
-    public static String[][] makeMove(String[][] board, String turn)
+    public static String[][] makeMove(String[][] board, String turn, int discsNeededToWin)
     {
-        int bestmove[] = checkForBestMove(board, turn);
+        int bestmove[] = checkForBestMove(board, turn, discsNeededToWin);
 
 
         return board;
     }
-    public static int[] checkForBestMove(String[][] board, String turn)
+    public static int[] checkForBestMove(String[][] board, String turn, int discsNeededToWin)
     {
         int bestMove[] = {0, 0}; // Column with best move, score of that move
         int highestScoreOfIteration[] = {0,0};
@@ -35,7 +35,7 @@ public class Ai
 
                 // See what the score is if you would put the disc in this column
                 testBoard[placeDiscAtRow][placeDiscInColumn] = turn;
-                highestScoreOfIteration = calculateHighestScore(testBoard, turn);
+                highestScoreOfIteration = calculateHighestScore(testBoard, turn, discsNeededToWin);
 
                 if (highestScoreOfIteration[1] > bestMove[1]) {
                     bestMove[0] = highestScoreOfIteration[0];
@@ -47,9 +47,12 @@ public class Ai
         return bestMove;
     } // end makeAiMove()
 
-    public static int[] calculateHighestScore(String[][] board, String turn)
+    public static int[] calculateHighestScore(String[][] board, String turn, int discsNeededToWin)
     {
         // Go through each cell on the Connect 4 board
+        int bestMove[] = {0, 0}; // Column, score of that move
+        String playerToCheck = turn;
+
         for (int row = 0; row < board.length; row++ ) {
             for (int column = 0; column < board[row].length; column++) {
 
@@ -64,10 +67,9 @@ public class Ai
                             discsInARowSoFar++;
                         }
                     }
-                    if (discsInARowSoFar == discsNeededToWin) {
-                        // If somebody wins, print the final state of the board, then return the winner
-                        printBoard(board, discsNeededToWin);
-                        return playerToCheck;
+                    if (discsInARowSoFar > bestMove[1]) {
+                        bestMove[0] = column;
+                        bestMove[1] = discsInARowSoFar;
                     }
 
                     // Check verticals for wins
@@ -77,11 +79,11 @@ public class Ai
                             discsInARowSoFar++;
                         }
                     }
-                    if (discsInARowSoFar == discsNeededToWin) {
-                        // If somebody wins, print the final state of the board, then return the winner
-                        printBoard(board, discsNeededToWin);
-                        return playerToCheck;
+                    if (discsInARowSoFar > bestMove[1]) {
+                        bestMove[0] = column;
+                        bestMove[1] = discsInARowSoFar;
                     }
+
 
                     // Check left diagonals for wins
                     discsInARowSoFar = 0;
@@ -90,11 +92,11 @@ public class Ai
                             discsInARowSoFar++;
                         }
                     }
-                    if (discsInARowSoFar == discsNeededToWin) {
-                        // If somebody wins, print the final state of the board, then return the winner
-                        printBoard(board, discsNeededToWin);
-                        return playerToCheck;
+                    if (discsInARowSoFar > bestMove[1]) {
+                        bestMove[0] = column;
+                        bestMove[1] = discsInARowSoFar;
                     }
+
 
                     // Check right diagonals for wins
                     discsInARowSoFar = 0;
@@ -103,15 +105,17 @@ public class Ai
                             discsInARowSoFar++;
                         }
                     }
-                    if (discsInARowSoFar == discsNeededToWin) {
-                        // If somebody wins, print the final state of the board, then return the winner
-                        printBoard(board, discsNeededToWin);
-                        return playerToCheck;
+                    if (discsInARowSoFar > bestMove[1]) {
+                        bestMove[0] = column;
+                        bestMove[1] = discsInARowSoFar;
                     }
+
                 } catch (ArrayIndexOutOfBoundsException e) {
                     continue; // LOLOL
                 } // end try/catch
             } // end checks on respective columns in rows of board
         } // end checks on rows of board
+
+        return bestMove;
     }
 } // end class Ai
