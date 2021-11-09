@@ -12,41 +12,90 @@ import java.util.Scanner;
 
 public class Connect_4
 {
-    public static void main(String[] args)
-    {
-        // Init variables and scanner
-        int numRows = 6;
-        int numColumns = 7;
-        int gameMode; // 0=PvP, 1=PvCPU
-        int p1WinStreak = 0;
-        int p2WinStreak = 0;
-        int cpuWinStreak = 0;
-        boolean playAgain = true;
-        boolean gameOver = false;
-        String[][] board = new String[numRows][numColumns];
+    public static void main(String[] args) throws InterruptedException {
+        String playAgain = "Y";
         Scanner myInput = new Scanner(System.in);
 
         System.out.println("|| Connect 4 ||");
 
-        while (playAgain = true) {
+        while (playAgain.equals("Y")) {
 
-            // Print win streaks
-            printWinStreaks(p1WinStreak, p2WinStreak, cpuWinStreak);
+            // Init variables
+            int numRows = 6;
+            int numColumns = 7;
+            int gameMode; // 1=PvP, 2=PvCPU
+            int p1WinStreak = 0;
+            int p2WinStreak = 0;
+            int cpuWinStreak = 0;
+            String p1Character = "";
+            String p2Character = "";
+            String cpuCharacter = "";
+
+            String turn = "X";
+            String winner = "none";
+            String[][] board = new String[numRows][numColumns];
 
             // Get game mode choice
-            gameMode = getGameMode();
+            Object[] settings = setupGame();
+            gameMode = (int)(settings[0]);
+            p1Character = (String)(settings[1]);
+            p2Character = (String)(settings[2]);
+            cpuCharacter = (String)(settings[3]);
 
             // Empty game board
             board = emptyBoard(board);
 
             // Main gameplay loop
-            while (gameOver == false) {
+            while (winner != "X" && winner != "O") {
                 printBoard(board);
-                // Place disc for each player
-                board = placeDisc(board, gameMode, "X");
-                printBoard(board);
-                board = placeDisc(board, gameMode, "O");
+
+                if (turn.equals("X")) {
+                    board = placeDisc(board, gameMode, turn);
+                    turn = "O";
+                } else {
+                    board = placeDisc(board, gameMode, turn);
+                    turn = "X";
+                }
+
+                winner = checkIfWin(board);
             }
+
+            // Determine winner and display any win streaks
+            if (p1Character.equals(winner)) {
+                System.out.println("Congratulations! Player 1 Wins!");
+                p1WinStreak++;
+                p2WinStreak = 0;
+                cpuWinStreak = 0;
+            } else if (p2Character.equals(winner)) {
+                System.out.println("Congratulations! Player 2 Wins!");
+                p2WinStreak++;
+                p1WinStreak = 0;
+                cpuWinStreak = 0;
+            } else {
+                System.out.println("CPU Wins. Womp, womp.");
+                cpuWinStreak++;
+                p1WinStreak = 0;
+                p2WinStreak = 0;
+            }
+
+            Thread.sleep(2000);
+            printWinStreaks(p1WinStreak, p2WinStreak, cpuWinStreak);
+            Thread.sleep(2000);
+
+            // TODO: Change "win streaks" to leaderboard instead
+            // TODO: Add game timer (ex: at the end of game, print "Game Length: 5:46")
+
+            // See if user wants to play again
+            while (true) {
+                System.out.println("Would you like to play again? (Y/N)");
+                playAgain = myInput.next().toUpperCase();
+
+                if (!playAgain.equals("Y") && !playAgain.equals("N")) {
+                    System.out.println("Invalid Input.");
+                } else {
+                    break;
+                }
+            } // end "See if user wants to play again" loop
         } // end program loop
     } // end main()
     
@@ -54,24 +103,31 @@ public class Connect_4
     public static void printBoard(String[][] board)
     {
         // Print title and column numbers
-        // TODO: Figure out how to centre title
-        System.out.println("|| Connect 4 ||");
+        System.out.print("\n|-----Connect 4-----|");
+        System.out.println();
         for (int i = 0; i < board[0].length; i++) {
             System.out.print(" " + (i+1) + " ");
         }
         System.out.println();
 
-        // Print each row, starting from bottom left
-        for (int row = 0; row < board.length; row++ ) {
+        // Print each row, starting from the top of the board
+        for (int row = board.length - 1; row >= 0; row--) {
             // Print each column in that row
             for (int column = 0; column < board[row].length; column++) {
                 System.out.print("[" + board[row][column] + "]");
             }
             System.out.println();
         }
+
+        // Print column numbers again for readability
+        for (int i = 0; i < board[0].length; i++) {
+            System.out.print(" " + (i+1) + " ");
+        }
+        System.out.println("\n");
     } // end printBoard()
     
     // Fills Connect 4 Board with Blank Spaces
+    // Returns blanked board
     public static String[][] emptyBoard(String[][] board)
     {
         // Change each row, starting from bottom left
@@ -84,18 +140,23 @@ public class Connect_4
         return board;
     } // end emptyBoard()
 
-    // Asks user for game mode
-    public static int getGameMode()
+    // Asks user for game mode and who they want to play as ('X' or 'O')
+    // Returns their choices as an object
+    public static Object[] setupGame()
     {
         Scanner myInput = new Scanner(System.in);
         int gameMode = -1;
+        String p1Character = "";
+        String p2Character = "";
+        String cpuCharacter = "";
 
+        // Get game mode
         while (true) {
             try {
                 System.out.println("Choose your game mode:\n1: Player vs. Player\n2: Player vs. CPU");
                 gameMode = myInput.nextInt();
 
-                if (gameMode < 0 || gameMode > 1) {
+                if (gameMode < 1 || gameMode > 2) {
                     System.out.println("Invalid Input.");
                 }
                 else {
@@ -103,9 +164,32 @@ public class Connect_4
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid Input.");
+                myInput.nextLine();
             }
-        }
-        return gameMode;
+        } // end "get game mode" loop
+
+        // Get who user wants to play as ('X' or 'O)
+        while (true) {
+            System.out.println("Player 1,\nDo you want to be 'X' (go first) or 'O' (go second)?");
+            p1Character = myInput.next().toUpperCase();
+
+            if (p1Character.equals("X")) {
+                System.out.println("Player 1 is 'X' and the other player is 'O'.");
+                p2Character = "O";
+                cpuCharacter = "O";
+                break;
+            } else if (p1Character.equals("O")) {
+                System.out.println("Player 1 is 'O' and the other player is 'X'.");
+                p2Character = "X";
+                cpuCharacter = "X";
+                break;
+            } else {
+                System.out.println("Invalid Input.");
+            }
+        } // end "get who user wants to play as" loop
+
+        Object[] settings = {gameMode, p1Character, p2Character, cpuCharacter};
+        return settings;
     } // end getGameMode()
 
     // Prints win streaks (if there are any)
@@ -131,21 +215,91 @@ public class Connect_4
     } // end printWinStreaks()
 
     // Ask for choice and place disc in board
+    // Returns updated board
     public static String[][] placeDisc(String[][] board, int gameMode, String turn)
     {
         Scanner myInput = new Scanner(System.in);
-        System.out.println("Player " + turn + ": Choose column to place disc in: ");
-        int placeDiscInColumn = myInput.nextInt() - 1;
-        int placeDiscAtRow = 0;
 
-        // Find what row in column to place chip at (making disc "fall to bottom")
-        for (int row = 0; row < board.length; row++) {
-            if (!board[row][placeDiscInColumn].equals(" ")) {
-                placeDiscAtRow = row + 1;
+        // Extra loop to repeat code if user tries to place disc on full column
+        while (true) {
+
+            int placeDiscAtRow = 0;
+            int placeDiscInColumn = 0;
+
+            // Get user column choice
+            while (true) {
+                try {
+                    System.out.println("Player " + turn + ": Choose column to place disc in: ");
+                    placeDiscInColumn = myInput.nextInt() - 1;
+
+                    if (placeDiscInColumn > board[0].length - 1 || placeDiscInColumn < 0) {
+                        System.out.println("Invalid Input.");
+                    } else {
+                        break;
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid Input.");
+                    myInput.nextLine();
+                }
+            }
+
+            // Find what row in column to place chip at (making disc "fall to bottom")
+            for (int row = 0; row < board.length; row++) {
+                if (!board[row][placeDiscInColumn].equals(" ")) {
+                    placeDiscAtRow = row + 1;
+                }
+            }
+
+            // Check if placing disk here would overflow the column and cause the piece to fall on the floor
+            if (placeDiscAtRow > 5) {
+                System.out.println("Invalid Input.");
+            } else {
+                board[placeDiscAtRow][placeDiscInColumn] = turn;
+                break;
             }
         }
 
-        board[placeDiscAtRow][placeDiscInColumn] = turn;
         return board;
     } // end placeDisc()
+
+    // Check if anybody has won
+    // Returns winner (or an empty string if there is no winner)
+    public static String checkIfWin(String[][] board)
+    {
+        // First, check if 'X' won
+        String playerToCheck = "X";
+
+        // Repeat twice (Check if 'X' won, then check if 'O' won)
+        for (int i = 0; i < 2; i++) {
+
+            // Go through each cell on the Connect 4 board
+            for (int row = 0; row < board.length; row++ ) {
+                for (int column = 0; column < board[row].length; column++) {
+
+                    // Check for horizontal, vertical, left diagonal, and right diagonal 4-in-a-rows (respectively)
+                    // This algo is probably super slow, but hey, it works and it's mine :)
+                    try {
+                        if ((board[row][column].equals(playerToCheck) && board[row][column + 1].equals(playerToCheck) && board[row][column + 2].equals(playerToCheck) && board[row][column + 3].equals(playerToCheck))
+                                || (board[row][column].equals(playerToCheck) && board[row + 1][column].equals(playerToCheck) && board[row + 2][column].equals(playerToCheck) && board[row + 3][column].equals(playerToCheck))
+                                || (board[row][column].equals(playerToCheck) && board[row + 1][column + 1].equals(playerToCheck) && board[row + 2][column + 2].equals(playerToCheck) && board[row + 3][column + 3].equals(playerToCheck))
+                                || (board[row][column].equals(playerToCheck) && board[row + 1][column - 1].equals(playerToCheck) && board[row + 2][column - 2].equals(playerToCheck) && board[row + 3][column - 3].equals(playerToCheck))) {
+
+                            // If somebody wins, print the final state of the board, then return the winner
+                            printBoard(board);
+                            return playerToCheck;
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        continue; // LOL
+                    } // end try/catch
+
+                } // end checks on respective columns in rows of board
+            } // end checks on rows of board
+
+            // Make this loop check 'O' instead of 'X' next time
+            playerToCheck = "O";
+        }
+
+        // If there is no winner, return empty string
+        return "";
+    }
 } // end class Connect_4
