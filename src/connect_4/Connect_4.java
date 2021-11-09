@@ -13,60 +13,96 @@ import java.util.Scanner;
 public class Connect_4
 {
     public static void main(String[] args) throws InterruptedException {
-        int menuChoice = 0;
-        int gameMode = 1; // 1=PvP, 2=PvCPU
+
+        // Init variables and scanner
+        int gameMode = 0; // 1=PvP, 2=PvCPU
         int numRows = 6;
         int numColumns = 7;
-        String playAgain = "Y";
+        int discsNeededToWin = 4;
         Scanner myInput = new Scanner(System.in);
 
-        menuChoice = getMenuChoice();
-        System.out.println(menuChoice);
-        // Start Game (with specific board size and game mode)
-        if (menuChoice == 1) {
-            startGame(numRows, numColumns, gameMode);
+        // Repeat program until user selects 'exit' on the menu
+        while (true) {
 
-            // TODO: Add game timer (ex: at the end of game, print "Game Length: 5:46")
-        }
-        // View Leaderboard
-        else if (menuChoice == 2) {
-            // TODO: Change "win streaks" to leaderboard instead
-        }
-        // Exit
-        else if (menuChoice == 4) {
+            int menuChoice = getMenuChoice(discsNeededToWin);
 
-        }
-        // Change Game Mode
-        else if (menuChoice == 5) {
-
-        }
-        // Change Board Width
-        else if (menuChoice == 6) {
-
-        }
-        // Change Board Height
-        else if (menuChoice == 7) {
-
-        }
-        // Change number of discs-in-a-row needed to win
-        else if (menuChoice == 8) {
-
-        }
-        else {
-            System.out.println("Error");
-        }
+            // Start Game (with specific board size and game mode)
+            if (menuChoice == 1) {
+                startGame(numRows, numColumns, gameMode, discsNeededToWin);
+            }
+            // View Leaderboard
+            else if (menuChoice == 2) {
+                // TODO: Change "win streaks" to leaderboard instead
+            }
+            // Exit
+            else if (menuChoice == 4) {
+                return;
+            }
+            // Change Game Mode
+            else if (menuChoice == 5) {
+                gameMode = changeGameMode();
+            }
+            // Change Board Width
+            else if (menuChoice == 6) {
+                numColumns = changeBoardWidth(numColumns);
+            }
+            // Change Board Height
+            else if (menuChoice == 7) {
+                numRows = changeBoardHeight(numRows);
+            }
+            // Change number of discs-in-a-row needed to win
+            else if (menuChoice == 8) {
+                discsNeededToWin = changeDiscsNeededToWin(numRows, numColumns, discsNeededToWin);
+            }
+            else {
+                System.out.println("Error");
+            }
+        } // end program loop
     } // end main()
+
+    // Change number of discs-in-a-row needed to win.
+    // Requires numRows and numColumns to be passed in for error checking.
+    // Returns updated int discsNeededToWin
+    public static int changeDiscsNeededToWin(int numRows, int numColumns, int discsNeededToWin)
+    {
+        Scanner myInput = new Scanner(System.in);
+
+        // Get number discs-in-a-row needed to win (with error checking)
+        while (true) {
+            try {
+                System.out.println("|| Change Number of Discs-In-a-Row Needed to Win ||\nCurrent: " + discsNeededToWin + " Discs.\nEnter a new value: ");
+                int tempDiscsNeededToWin = myInput.nextInt();
+
+                if (tempDiscsNeededToWin > numRows) {
+                    System.out.println("Invalid Input. Please enter a value smaller than " + numRows+ ".");
+                } else if (tempDiscsNeededToWin > numColumns) {
+                    System.out.println("Invalid Input. Please enter a value smaller than " + numColumns + ".");
+                } else if (tempDiscsNeededToWin < 1) {
+                    System.out.println("Invalid Input.");
+                } else {
+                    discsNeededToWin = tempDiscsNeededToWin;
+                    break;
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Invalid Input.");
+                myInput.nextLine();
+            } // end try/catch
+        } // end "get number discs-in-a-row needed to win" loop
+
+        return discsNeededToWin;
+    } // end changeDiscsNeededToWin()
 
     // Print game options
     // Returns user's selection
-    public static int getMenuChoice()
+    public static int getMenuChoice(int discsNeededToWin)
     {
         Scanner myInput = new Scanner(System.in);
         int menuChoice = 0;
 
         while (true) {
             try {
-                System.out.println("\n|| Connect 4 ||");
+                System.out.println("|| Connect " + discsNeededToWin + " ||");
                 System.out.println("1: Start Game\n2: View Leaderboard\n3: Change Settings\n4: Exit");
                 System.out.println("\nEnter your choice: ");
                 menuChoice = myInput.nextInt();
@@ -75,7 +111,7 @@ public class Connect_4
 
                     while (true) {
                         try {
-                            System.out.println("\n|| Settings ||");
+                            System.out.println("|| Settings ||");
                             System.out.println("1: Change Game Mode\n2: Change Board Width\n3: Change Board Height\n4: Change number of discs-in-a-row needed to win\n5: Go back");
                             System.out.println("\nEnter your choice: ");
 
@@ -109,9 +145,93 @@ public class Connect_4
         }
 
         return menuChoice;
-    }
+    } // end getMenuChoice()
 
-    public static void startGame(int numRows, int numColumns, int gameMode) throws InterruptedException {
+    // Changes game mode
+    // Returns update int gameMode();
+    public static int changeGameMode()
+    {
+        Scanner myInput = new Scanner(System.in);
+        int gameMode = 0;
+
+        // Get game mode from user (with error checking)
+        while (true) {
+            try {
+                System.out.println("|| Choose a Game Mode ||\n1: Player vs. Player\n2: Player vs. Computer\n\nEnter your choice:");
+                gameMode = myInput.nextInt();
+
+                if (gameMode > 2 || gameMode < 1) {
+                    System.out.println("Invalid Input.");
+                } else {
+                    break;
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Invalid Input.");
+                myInput.nextLine();
+            }
+        }
+        return gameMode;
+    } // end changeGameMode()
+
+    // Changes board width (num of columns)
+    // Returns updated board width (int numColumns)
+    public static int changeBoardWidth(int numColumns)
+    {
+        Scanner myInput = new Scanner(System.in);
+
+        // Get number of columns from user (with error checking)
+        while (true) {
+            try {
+                System.out.println("|| Choose Board Width ||\nCurrent Board Width: " + numColumns + " Columns.\nEnter a New Board Width: ");
+                numColumns = myInput.nextInt();
+
+                if (numColumns > 9) {
+                    System.out.println("The maximum board size is 9x9");
+                } else if (numColumns < 1) {
+                    System.out.println("You can't make a board this small!");
+                } else {
+                    break;
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Invalid Input.");
+                myInput.nextLine();
+            }
+        }
+        return numColumns;
+    } // end changeBoardWidth()
+
+    // Changes board height (num of rows)
+    // Returns updated board height (int numRows)
+    public static int changeBoardHeight(int numRows)
+    {
+        Scanner myInput = new Scanner(System.in);
+
+        // Get number of columns from user (with error checking)
+        while (true) {
+            try {
+                System.out.println("|| Choose Board Width ||\nCurrent Board Width: " + numRows + " Rows.\nEnter a New Board Width: ");
+                numRows = myInput.nextInt();
+
+                if (numRows > 9) {
+                    System.out.println("The maximum board size is 9x9");
+                } else if (numRows < 1) {
+                    System.out.println("You can't make a board this small!");
+                } else {
+                    break;
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println("Invalid Input.");
+                myInput.nextLine();
+            }
+        }
+        return numRows;
+    } // end changeBoardHeight()
+
+    public static void startGame(int numRows, int numColumns, int gameMode, int discsNeededToWin) throws InterruptedException {
+
         // Init variables
         int p1WinStreak = 0;
         int p2WinStreak = 0;
@@ -119,24 +239,30 @@ public class Connect_4
         String p1Character = "";
         String p2Character = "";
         String cpuCharacter = "";
-
         String turn = "X";
         String winner = "none";
         String[][] board = new String[numRows][numColumns];
 
-        // Get game mode choice
-        Object[] settings = setupGame();
-        gameMode = (int)(settings[0]);
-        p1Character = (String)(settings[1]);
-        p2Character = (String)(settings[2]);
-        cpuCharacter = (String)(settings[3]);
+        // If gameMode hasn't been set already, then make sure to set it!
+        if (gameMode == 0) {
+            gameMode = changeGameMode();
+        }
+
+        // Get who each player is playing as
+        Object[] settings = selectPlayers();
+        p1Character = (String)(settings[0]);
+        p2Character = (String)(settings[1]);
+        cpuCharacter = (String)(settings[2]);
 
         // Empty game board
         board = emptyBoard(board);
 
+        // Set game timer
+        long secondsTimer = System.nanoTime();
+
         // Main gameplay loop
         while (winner != "X" && winner != "O") {
-            printBoard(board);
+            printBoard(board, discsNeededToWin);
 
             if (turn.equals("X")) {
                 board = placeDisc(board, gameMode, turn);
@@ -146,7 +272,7 @@ public class Connect_4
                 turn = "X";
             }
 
-            winner = checkIfWin(board);
+            winner = checkIfWin(board, discsNeededToWin);
         }
 
         // Determine winner and display any win streaks
@@ -167,15 +293,35 @@ public class Connect_4
             p2WinStreak = 0;
         }
 
+        // Convert game length in nanoseconds to game length in seconds
+        secondsTimer = (System.nanoTime() - secondsTimer) / 1_000_000_000;
+
+        // Count minutes (will go unused if game is under 60 seconds)
+        long minutesTimer =  secondsTimer / 60;
+
         Thread.sleep(2000);
-        printWinStreaks(p1WinStreak, p2WinStreak, cpuWinStreak);
+
+        // Print time elapsed in game with proper grammar
+        if (secondsTimer < 60) {
+            System.out.println("Game length: " + secondsTimer + " seconds");
+        } else if (secondsTimer < 120) {
+            System.out.println("Game length: " + minutesTimer + " minute and " + (secondsTimer % 60) + " seconds.");
+        } else {
+            System.out.println("Game length: " + minutesTimer + " minutes and " + (secondsTimer % 60) + " seconds.");
+        }
+        System.out.println();
         Thread.sleep(2000);
+
+        // Print win streaks
+//        Thread.sleep(2000);
+//        printWinStreaks(p1WinStreak, p2WinStreak, cpuWinStreak);
+//        Thread.sleep(2000);
     }
     // Prints out Connect 4 board
-    public static void printBoard(String[][] board)
+    public static void printBoard(String[][] board, int discsNeededToWin)
     {
         // Print title and column numbers
-        System.out.print("\n|-----Connect 4-----|");
+        System.out.print("\n|-----Connect " + discsNeededToWin + "-----|");
         System.out.println();
         for (int i = 0; i < board[0].length; i++) {
             System.out.print(" " + (i+1) + " ");
@@ -212,33 +358,15 @@ public class Connect_4
         return board;
     } // end emptyBoard()
 
-    // Asks user for game mode and who they want to play as ('X' or 'O')
+    // Asks user for who they want to play as ('X' or 'O')
     // Returns their choices as an object
-    public static Object[] setupGame()
+    public static Object[] selectPlayers()
     {
+        // Init variables
         Scanner myInput = new Scanner(System.in);
-        int gameMode = -1;
         String p1Character = "";
         String p2Character = "";
         String cpuCharacter = "";
-
-        // Get game mode
-        while (true) {
-            try {
-                System.out.println("Choose your game mode:\n1: Player vs. Player\n2: Player vs. CPU");
-                gameMode = myInput.nextInt();
-
-                if (gameMode < 1 || gameMode > 2) {
-                    System.out.println("Invalid Input.");
-                }
-                else {
-                    break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid Input.");
-                myInput.nextLine();
-            }
-        } // end "get game mode" loop
 
         // Get who user wants to play as ('X' or 'O)
         while (true) {
@@ -260,30 +388,14 @@ public class Connect_4
             }
         } // end "get who user wants to play as" loop
 
-        Object[] settings = {gameMode, p1Character, p2Character, cpuCharacter};
+        Object[] settings = {p1Character, p2Character, cpuCharacter};
         return settings;
     } // end getGameMode()
 
-    // Prints win streaks (if there are any)
-    public static void printWinStreaks(int p1WinStreak, int p2WinStreak, int cpuWinStreak)
+    // Print leaderboard (if there is one)
+    public static void printLeaderboard(String[][] leaderboard)
     {
-        if (p1WinStreak != 0) {
-            System.out.print("Player 1 Win Streak: " + p1WinStreak + " || ");
 
-            if (p2WinStreak != 0 || cpuWinStreak != 0) {
-                System.out.print(" | ");
-            }
-        }
-        if (p2WinStreak != 0) {
-            System.out.println("Player 2 Win Streak: " + p1WinStreak);
-
-            if (cpuWinStreak != 0) {
-                System.out.print(" | ");
-            }
-        }
-        if (cpuWinStreak != 0) {
-            System.out.print("CPU Win Streak: " + cpuWinStreak);
-        }
     } // end printWinStreaks()
 
     // Ask for choice and place disc in board
@@ -301,7 +413,7 @@ public class Connect_4
             // Get user column choice
             while (true) {
                 try {
-                    System.out.println("Player " + turn + ": Choose column to place disc in: ");
+                    System.out.println(turn + ": Choose column to place disc in: ");
                     placeDiscInColumn = myInput.nextInt() - 1;
 
                     if (placeDiscInColumn > board[0].length - 1 || placeDiscInColumn < 0) {
@@ -336,7 +448,7 @@ public class Connect_4
 
     // Check if anybody has won
     // Returns winner (or an empty string if there is no winner)
-    public static String checkIfWin(String[][] board)
+    public static String checkIfWin(String[][] board, int discsNeededToWin)
     {
         // First, check if 'X' won
         String playerToCheck = "X";
@@ -350,20 +462,62 @@ public class Connect_4
 
                     // Check for horizontal, vertical, left diagonal, and right diagonal 4-in-a-rows (respectively)
                     // This algo is probably super slow, but hey, it works and it's mine :)
-                    try {
-                        if ((board[row][column].equals(playerToCheck) && board[row][column + 1].equals(playerToCheck) && board[row][column + 2].equals(playerToCheck) && board[row][column + 3].equals(playerToCheck))
-                                || (board[row][column].equals(playerToCheck) && board[row + 1][column].equals(playerToCheck) && board[row + 2][column].equals(playerToCheck) && board[row + 3][column].equals(playerToCheck))
-                                || (board[row][column].equals(playerToCheck) && board[row + 1][column + 1].equals(playerToCheck) && board[row + 2][column + 2].equals(playerToCheck) && board[row + 3][column + 3].equals(playerToCheck))
-                                || (board[row][column].equals(playerToCheck) && board[row + 1][column - 1].equals(playerToCheck) && board[row + 2][column - 2].equals(playerToCheck) && board[row + 3][column - 3].equals(playerToCheck))) {
 
+                    try {
+                        // Check horizontals for wins
+                        int discsInARowSoFar = 0;
+                        for (int j = 0; j < discsNeededToWin; j++) {
+                            if (board[row][column + j].equals(playerToCheck)) {
+                                discsInARowSoFar++;
+                            }
+                        }
+                        if (discsInARowSoFar == discsNeededToWin) {
                             // If somebody wins, print the final state of the board, then return the winner
-                            printBoard(board);
+                            printBoard(board, discsNeededToWin);
+                            return playerToCheck;
+                        }
+
+                        // Check verticals for wins
+                        discsInARowSoFar = 0;
+                        for (int j = 0; j < discsNeededToWin; j++) {
+                            if (board[row + j][column].equals(playerToCheck)) {
+                                discsInARowSoFar++;
+                            }
+                        }
+                        if (discsInARowSoFar == discsNeededToWin) {
+                            // If somebody wins, print the final state of the board, then return the winner
+                            printBoard(board, discsNeededToWin);
+                            return playerToCheck;
+                        }
+
+                        // Check left diagonals for wins
+                        discsInARowSoFar = 0;
+                        for (int j = 0; j < discsNeededToWin; j++) {
+                            if (board[row + j][column + j].equals(playerToCheck)) {
+                                discsInARowSoFar++;
+                            }
+                        }
+                        if (discsInARowSoFar == discsNeededToWin) {
+                            // If somebody wins, print the final state of the board, then return the winner
+                            printBoard(board, discsNeededToWin);
+                            return playerToCheck;
+                        }
+
+                        // Check right diagonals for wins
+                        discsInARowSoFar = 0;
+                        for (int j = 0; j < discsNeededToWin; j++) {
+                            if (board[row - j][column - j].equals(playerToCheck)) {
+                                discsInARowSoFar++;
+                            }
+                        }
+                        if (discsInARowSoFar == discsNeededToWin) {
+                            // If somebody wins, print the final state of the board, then return the winner
+                            printBoard(board, discsNeededToWin);
                             return playerToCheck;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        continue; // LOL
+                        continue; // LOLOL
                     } // end try/catch
-
                 } // end checks on respective columns in rows of board
             } // end checks on rows of board
 
