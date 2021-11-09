@@ -66,18 +66,18 @@ public class Connect_4
 
         while (true) {
             try {
-                System.out.println("|| Connect 4 ||");
+                System.out.println("\n|| Connect 4 ||");
                 System.out.println("1: Start Game\n2: View Leaderboard\n3: Change Settings\n4: Exit");
-                System.out.println("Enter your choice: ");
+                System.out.println("\nEnter your choice: ");
                 menuChoice = myInput.nextInt();
 
                 if (menuChoice == 3) {
 
                     while (true) {
                         try {
-                            System.out.println("|| Settings ||");
+                            System.out.println("\n|| Settings ||");
                             System.out.println("1: Change Game Mode\n2: Change Board Width\n3: Change Board Height\n4: Change number of discs-in-a-row needed to win\n5: Go back");
-                            System.out.println("Enter your choice: ");
+                            System.out.println("\nEnter your choice: ");
 
                             menuChoice = myInput.nextInt() + 4;
 
