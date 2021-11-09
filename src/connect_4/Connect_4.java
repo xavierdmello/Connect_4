@@ -7,6 +7,8 @@
 
 package connect_4;
 
+import jdk.internal.util.xml.impl.Input;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -314,14 +316,21 @@ public class Connect_4
 
         // Print win streaks
 //        Thread.sleep(2000);
-//        printWinStreaks(p1WinStreak, p2WinStreak, cpuWinStreak);
+//        printWinStreaks(p1Win2Streak, p2WinStreak, cpuWinStreak);
 //        Thread.sleep(2000);
     }
     // Prints out Connect 4 board
     public static void printBoard(String[][] board, int discsNeededToWin)
     {
         // Print title and column numbers
-        System.out.print("\n|-----Connect " + discsNeededToWin + "-----|");
+        System.out.println("\n|-----Connect " + discsNeededToWin + "-----|");
+
+        // TODO: Remove following debug code
+        int xHighestScoreInBoard = Ai.calculateHighestScoreInBoard(board,"X", discsNeededToWin);
+        System.out.println("X's highest score in board: " + xHighestScoreInBoard);
+        int oHighestScoreInBoard = Ai.calculateHighestScoreInBoard(board,"O", discsNeededToWin);
+        System.out.println("O's highest score in board: " + oHighestScoreInBoard);
+
         System.out.println();
         for (int i = 0; i < board[0].length; i++) {
             System.out.print(" " + (i+1) + " ");
@@ -463,8 +472,8 @@ public class Connect_4
                     // Check for horizontal, vertical, left diagonal, and right diagonal 4-in-a-rows (respectively)
                     // This algo is probably super slow, but hey, it works and it's mine :)
 
+                    // Check horizontals for wins
                     try {
-                        // Check horizontals for wins
                         int discsInARowSoFar = 0;
                         for (int j = 0; j < discsNeededToWin; j++) {
                             if (board[row][column + j].equals(playerToCheck)) {
@@ -476,9 +485,13 @@ public class Connect_4
                             printBoard(board, discsNeededToWin);
                             return playerToCheck;
                         }
+                    } catch (ArrayIndexOutOfBoundsException e) {
 
-                        // Check verticals for wins
-                        discsInARowSoFar = 0;
+                    }
+
+                    // Check verticals for wins
+                    try {
+                        int discsInARowSoFar = 0;
                         for (int j = 0; j < discsNeededToWin; j++) {
                             if (board[row + j][column].equals(playerToCheck)) {
                                 discsInARowSoFar++;
@@ -489,9 +502,13 @@ public class Connect_4
                             printBoard(board, discsNeededToWin);
                             return playerToCheck;
                         }
+                    } catch (ArrayIndexOutOfBoundsException e) {
 
-                        // Check left diagonals for wins
-                        discsInARowSoFar = 0;
+                    }
+
+                    // Check left diagonals for wins
+                    try {
+                        int discsInARowSoFar = 0;
                         for (int j = 0; j < discsNeededToWin; j++) {
                             if (board[row + j][column + j].equals(playerToCheck)) {
                                 discsInARowSoFar++;
@@ -502,9 +519,13 @@ public class Connect_4
                             printBoard(board, discsNeededToWin);
                             return playerToCheck;
                         }
+                    } catch (ArrayIndexOutOfBoundsException e) {
 
-                        // Check right diagonals for wins
-                        discsInARowSoFar = 0;
+                    }
+
+                    // Check right diagonals for wins
+                    try {
+                        int discsInARowSoFar = 0;
                         for (int j = 0; j < discsNeededToWin; j++) {
                             if (board[row - j][column - j].equals(playerToCheck)) {
                                 discsInARowSoFar++;
@@ -516,8 +537,8 @@ public class Connect_4
                             return playerToCheck;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        continue; // LOLOL
-                    } // end try/catch
+
+                    }
                 } // end checks on respective columns in rows of board
             } // end checks on rows of board
 
