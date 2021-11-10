@@ -23,5 +23,5 @@ It's not the best thing ever, but I wanted to think of an AI by myself - and I s
 Overall, it's probably like playing against a 7-year-old. See /src/connect_4/AI.java for more info.
 
 # FAQ
-Why is AI.java so nonsensical?
+*Why is AI.java so nonsensical?*
 - Uh... just don't scroll down that document too far <(￣︶￣)>
