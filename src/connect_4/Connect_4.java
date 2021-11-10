@@ -3,6 +3,7 @@
  *  Teacher: Mrs. McCaffery
  *  Date: November 8th, 2021
  *  Description: A Game of Connect 4.
+ *               This class handles the majority of the game, but not the AI.
  */
 
 package connect_4;
@@ -12,9 +13,10 @@ import java.util.Scanner;
 
 public class Connect_4
 {
-    public static void main(String[] args) throws InterruptedException {
-
-        // Init variables and scanner
+    public static void main(String[] args) throws InterruptedException
+    {
+        // Init game-persistent variables and scanner
+        // These vars will persist over each game (unless user changes them, of course)
         int gameMode = 0; // 1=PvP, 2=PvCPU
         int numRows = 6;
         int numColumns = 7;
@@ -50,12 +52,14 @@ public class Connect_4
             else if (menuChoice == 7) {
                 discsNeededToWin = changeDiscsNeededToWin(numRows, numColumns, discsNeededToWin);
             }
-        } // end program loop
+        } // end main menu loop
     } // end main()
 
-    // Change number of discs-in-a-row needed to win.
-    // Requires numRows and numColumns to be passed in for error checking.
-    // Returns updated int discsNeededToWin
+    /* Method Name: changeDiscsNeededToWin
+     * Description: Change number of discs-in-a-row needed to win.
+     * Parameters: int numRows, int numColumns, int discsNeededToWin
+     * Returns: updated value of int discsNeededToWin
+     */
     public static int changeDiscsNeededToWin(int numRows, int numColumns, int discsNeededToWin)
     {
         Scanner myInput = new Scanner(System.in);
@@ -63,9 +67,11 @@ public class Connect_4
         // Get number discs-in-a-row needed to win (with error checking)
         while (true) {
             try {
+                // Get new value of discs
                 System.out.println("\n|| Change Number of Discs-In-a-Row Needed to Win ||\nCurrent: " + discsNeededToWin + " Discs.\nEnter a new value: ");
                 int tempDiscsNeededToWin = myInput.nextInt();
 
+                // Error Check Updated Value & Proper Grammar
                 if (tempDiscsNeededToWin > numRows) {
                     System.out.println("Your board is only " + numRows+ " rows tall. Please enter a smaller number of discs.");
                 } else if (tempDiscsNeededToWin > numColumns) {
@@ -86,36 +92,48 @@ public class Connect_4
         return discsNeededToWin;
     } // end changeDiscsNeededToWin()
 
-    // Print game options
-    // Returns user's selection
+    /* Method Name: getMenuChoice
+     * Description: Print Main Menu / Settings Menu & Return User Choice
+     * Parameters: int discsNeededToWin
+     * Returns: int menuChoice
+     */
     public static int getMenuChoice(int discsNeededToWin)
     {
+        // Init Variables
         Scanner myInput = new Scanner(System.in);
         int menuChoice = 0;
 
+        // Repeat menu until user enters correct input
         while (true) {
             try {
+                // Main Menu Options
                 System.out.println("\n|| Connect " + discsNeededToWin + " ||");
                 System.out.println("1: Start Game\n2: Change Settings\n3: Exit");
                 System.out.println("Enter your choice: ");
                 menuChoice = myInput.nextInt();
 
+                // If user selects the settings menu, print the settings menu
                 if (menuChoice == 2) {
-
                     while (true) {
                         try {
+                            // Settings Menu Options
                             System.out.println("\n|| Settings ||");
                             System.out.println("1: Change Game Mode\n2: Change Board Width\n3: Change Board Height\n4: Change number of discs-in-a-row needed to win\n5: Go back");
                             System.out.println("Enter your choice: ");
 
+                            // Because menuChoice is being handled by main(),
+                            // increment by 3 to differentiate settings from main menu options.
                             menuChoice = myInput.nextInt() + 3;
 
+                            // Error Checking
                             if (menuChoice < 4 || menuChoice > 8) {
                                 System.out.println("Invalid Input.");
                             }
+                            // If user selects "Go Back"
                             else if (menuChoice == 8) {
                                 break;
                             }
+                            // If user enters a valid input
                             else {
                                 return menuChoice;
                             }
@@ -123,8 +141,10 @@ public class Connect_4
                             System.out.println("Invalid Input.");
                             myInput.nextLine();
                         }
-                    }
-                }
+                    } // end settings menu loop
+                } // end setting menu if statement
+
+                // If user selects a non-existent value on the main menu
                 else if (menuChoice > 3 || menuChoice < 1) {
                     System.out.println("Invalid Input.");
                 }
@@ -135,45 +155,59 @@ public class Connect_4
                 System.out.println("Invalid Input");
                 myInput.nextLine();
             }
-        }
+        } // End Main Menu Loop
 
+        // After all checks have passed, return user's menu choice to main()
         return menuChoice;
     } // end getMenuChoice()
 
-    // Changes game mode
-    // Returns update int gameMode();
+    /* Method Name: changeGameMode
+     * Description: Changes Game Mode (1=PvP, 2=PvCPU)
+     * Parameters: None
+     * Returns: Returns updated int gameMode();
+     */
     public static int changeGameMode()
     {
+        // Init Variables
         Scanner myInput = new Scanner(System.in);
         int gameMode = 0;
 
-        // Get game mode from user (with error checking)
+        // Get game mode from user (with error checking). Repeat menu until they enter a proper value.
         while (true) {
             try {
+                // Print Game Mode Options
                 System.out.println("\n|| Choose a Game Mode ||\n1: Player vs. Player\n2: Player vs. Computer\nEnter your choice:");
                 gameMode = myInput.nextInt();
 
+                // Check if user tried to select a non-existent option
                 if (gameMode > 2 || gameMode < 1) {
                     System.out.println("Invalid Input.");
-                } else {
+                }
+                // Give player feedback that their selection worked (important)
+                else {
                     if (gameMode == 1) {
                         System.out.println("Gamemode set to Player vs. Player.");
                     } else {
                         System.out.println("Gamemode set to Player vs. Computer.");
                     }
                     break;
-                }
+                } // End error checking & feedback if statement
             }
             catch (InputMismatchException e) {
                 System.out.println("Invalid Input.");
                 myInput.nextLine();
-            }
-        }
+            } // end Game Mode menu try/catch
+        } // end Game Mode menu selection loop
+
+        // After all checks have passed, return user's menu choice to main()
         return gameMode;
     } // end changeGameMode()
 
-    // Changes board width (num of columns)
-    // Returns updated board width (int numColumns)
+    /* Method Name: changeBoardWidth
+     * Description: Changes Board Width (num of columns)
+     * Parameters: int numColumns
+     * Returns: Updated board width (int numColumns)
+     */
     public static int changeBoardWidth(int numColumns)
     {
         Scanner myInput = new Scanner(System.in);
@@ -202,8 +236,12 @@ public class Connect_4
         return numColumns;
     } // end changeBoardWidth()
 
-    // Changes board height (num of rows)
-    // Returns updated board height (int numRows)
+
+    /* Method Name: changeBoardHeight
+     * Description: Changes Board Height (num of rows)
+     * Parameters: int numRows
+     * Returns: Updated board height (int numRows)
+     */
     public static int changeBoardHeight(int numRows)
     {
         Scanner myInput = new Scanner(System.in);
@@ -232,6 +270,11 @@ public class Connect_4
         return numRows;
     } // end changeBoardHeight()
 
+    /* Method Name: startGame
+     * Description: It's the main game loop. Starts game with specific board size and game mode.
+     * Parameters: int numRows, int numColumns, int gameMode, int discsNeededToWin
+     * Returns: None
+     */
     public static void startGame(int numRows, int numColumns, int gameMode, int discsNeededToWin) throws InterruptedException {
 
         // Init variables
@@ -259,33 +302,51 @@ public class Connect_4
 
         // Main gameplay loop
         while (!winner.equals("X") && !winner.equals("O")) {
+
+            // Print Board
             printBoard(board, discsNeededToWin);
+
+            // If its X's turn:
             if (turn.equals("X")) {
+
+                // If it's the CPU's turn:
                 if (cpuCharacter.equals("X")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
                     System.out.println("CPU is Calculating Move...");
                     Thread.sleep(2000);
                 }
+
+                // If it's a player's turn:
                 else {
-                    board = placeDisc(board, gameMode, turn);
+                    board = placeDisc(board, turn);
                 }
+
+                // Swap turn to the other player for the next iteration of this loop
                 turn = "O";
-            } else {
+            }
+            // If its O's turn:
+            else {
+
+                // If it's the CPU's turn:
                 if (cpuCharacter.equals("O")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
                     System.out.println("CPU is Calculating Move...");
                     Thread.sleep(2000);
                 }
+                // If it's a player's turn:
                 else {
-                    board = placeDisc(board, gameMode, turn);
+                    board = placeDisc(board, turn);
                 }
+
+                // Swap turn to the other player for the next iteration of this loop
                 turn = "X";
             }
+
             // Check if there is a winner after each round
             winner = checkIfWin(board, discsNeededToWin);
         } // end main gameplay loop
 
-        // Print final winning board
+        // Once there is a winner, print final winning board
         printBoard(board, discsNeededToWin);
 
         // Print winner
@@ -310,7 +371,11 @@ public class Connect_4
         Thread.sleep(2000);
     } // end startGame()
 
-    // Prints out Connect 4 board
+    /* Method Name: printBoard
+     * Description: Prints Out The Connect-4 Board.
+     * Parameters: String[][] board, int discsNeededToWin
+     * Returns: None
+     */
     public static void printBoard(String[][] board, int discsNeededToWin)
     {
         // Print title
@@ -333,24 +398,33 @@ public class Connect_4
         }
         System.out.println("\n");
     } // end printBoard()
-    
-    // Fills Connect 4 Board with Blank Spaces
-    // Returns blanked board
+
+    /* Method Name: emptyBoard
+     * Description: Fills Connect 4 Board With Blank Spaces
+     * Parameters: String[][] board
+     * Returns: Emptied Connect 4 board (String[][] board)
+     */
     public static String[][] emptyBoard(String[][] board)
     {
-        // Change each row, starting from bottom left
+        // Change each row, starting from bottom left:
         for (int row = 0; row < board.length; row++ ) {
-            // Change each column in that row
+            // Change each column in that row:
             for (int column = 0; column < board[row].length; column++) {
+                // Set each cell to a blank space:
                 board[row][column] = " ";
             }
         }
+
+        // Return the emptied board
         return board;
     } // end emptyBoard()
 
-    // Only for PvCPU games.
-    // Asks user for who they want to play as ('X' or 'O')
-    // Returns cpuCharacter (returning player character as well is redundant)
+    /* Method Name: selectPlayer
+     * Description: Only for PvCPU games. Asks user for who they want to play as ('X' or 'O')
+     *              --> For PvP games, the users can figure out who plays as X and O themselves. Lol.
+     * Parameters: None
+     * Returns: Returns cpuCharacter (returning player character as well is redundant)
+     */
     public static String selectPlayer()
     {
         // Init variables
@@ -360,53 +434,72 @@ public class Connect_4
 
         // Get who user wants to play as ('X' or 'O)
         while (true) {
+            // Get user choice
             System.out.println("Do you want to play as X or O? (X/O)");
             playerCharacter = myInput.next().toUpperCase();
 
+            // If user chooses to be X
             if (playerCharacter.equals("X")) {
                 System.out.println("Player is X and CPU is O.");
                 cpuCharacter = "O";
                 break;
-            } else if (playerCharacter.equals("O")) {
+            }
+            // If user chooses to be O
+            else if (playerCharacter.equals("O")) {
                 System.out.println("Player is O and CPU is X.");
                 cpuCharacter = "X";
                 break;
-            } else {
+            }
+            // Otherwise, user has entered an invalid choice.
+            else {
                 System.out.println("Invalid Input.");
             }
         } // end "get who user wants to play as" loop
 
+        // Returns the CPU's character. Returning player character as well is redundant.
         return cpuCharacter;
     } // end getGameMode()
 
-    // Ask for choice and place disc in board
-    // Returns updated board
-    public static String[][] placeDisc(String[][] board, int gameMode, String turn)
+    /* Method Name: placeDisc
+     * Description: Asks user for their move and places disc in board.
+     * Parameters: String[][] board,String turn
+     * Returns: Returns updated board (String[][] board)
+     */
+    public static String[][] placeDisc(String[][] board, String turn)
     {
+        // Init scanner
         Scanner myInput = new Scanner(System.in);
 
         // Extra loop to repeat code if user tries to place disc on full column
+        // The purpose of this loop will become more apparent in 30 lines :)
         while (true) {
 
+            // These vars will be the final coordinates of the disc after it is dropped into a column
             int placeDiscAtRow = 0;
             int placeDiscInColumn = 0;
 
-            // Get user column choice
+            // Get what column user wants to place their piece in.
+            // Repeats until user enters valid input.
+            // Does not check if piece will overflow column - that will happen later.
             while (true) {
                 try {
+                    // Get user input:
                     System.out.println(turn + ": Choose column to place disc in: ");
                     placeDiscInColumn = myInput.nextInt() - 1;
 
+                    // If input is out of bounds:
                     if (placeDiscInColumn > board[0].length - 1 || placeDiscInColumn < 0) {
                         System.out.println("Invalid Input.");
                     } else {
                         break;
                     }
+
+                // If input isn't a number:
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid Input.");
                     myInput.nextLine();
-                }
-            }
+                } // end try/catch
+            } // end "get user move" loop
 
             // Find what row in column to place chip at (making disc "fall to bottom")
             for (int row = 0; row < board.length; row++) {
@@ -415,20 +508,27 @@ public class Connect_4
                 }
             }
 
-            // Check if placing disk here would overflow the column and cause the piece to fall on the floor
+            // Check if placing disk here would overflow the column and cause the piece to fall on the floor :(
             if (placeDiscAtRow > 5) {
+                // If it will, yell at user, and repeat selection loop:
                 System.out.println("Invalid Input.");
             } else {
+                // If the move is perfectly valid, put move into board array, and end column selection loop:
                 board[placeDiscAtRow][placeDiscInColumn] = turn;
                 break;
-            }
-        }
+            }  // end column overflow check
+        } // end column selection loop
 
+        // Return updated board
         return board;
     } // end placeDisc()
 
-    // Check if anybody has won
-    // Returns winner (or an empty string if there is no winner)
+
+    /* Method Name: checkIfWin
+     * Description: Checks the board to see if anybody won.
+     * Parameters: String[][] board, int discsNeededToWin
+     * Returns: Winner (String playerToCheck) or an empty string if nobody has won.
+     */
     public static String checkIfWin(String[][] board, int discsNeededToWin)
     {
         // First, check if 'X' won
@@ -504,9 +604,10 @@ public class Connect_4
 
             // Make this loop check 'O' instead of 'X' next time
             playerToCheck = "O";
-        }
+
+        } // end "check both players" loop (repeats twice)
 
         // If there is no winner, return empty string
         return "";
-    }
+    } // end checkIfWin()
 } // end class Connect_4
