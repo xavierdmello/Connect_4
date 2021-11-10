@@ -313,26 +313,23 @@ public class Connect_4
     // Prints out Connect 4 board
     public static void printBoard(String[][] board, int discsNeededToWin)
     {
-        // Print title and column numbers
-        System.out.println("\n|-----Connect " + discsNeededToWin + "-----|");
-
-        for (int i = 0; i < board[0].length; i++) {
-            System.out.print(" " + (i+1) + " ");
-        }
-        System.out.println();
+        // Print title
+        System.out.println("\n|---------Connect " + discsNeededToWin + "---------|");
 
         // Print each row, starting from the top of the board
         for (int row = board.length - 1; row >= 0; row--) {
             // Print each column in that row
+            System.out.print("| ");
             for (int column = 0; column < board[row].length; column++) {
-                System.out.print("[" + board[row][column] + "]");
+                System.out.print(board[row][column] + " | ");
             }
             System.out.println();
         }
 
-        // Print column numbers again for readability
+        // Print column numbers
+        System.out.print("  ");
         for (int i = 0; i < board[0].length; i++) {
-            System.out.print(" " + (i+1) + " ");
+            System.out.print((i+1) + "   ");
         }
         System.out.println("\n");
     } // end printBoard()
