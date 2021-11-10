@@ -69,8 +69,6 @@ public class AI
         return bestAIMove;
     }
 
-    // Ask for choice and place disc in board
-    // Returns updated board
     public static String[][] calculateMove(String[][] board, String turn, int discsNeededToWin)
     {
         String[][] newBoard = Arrays.stream(board).map(String[]::clone).toArray(String[][]::new);
