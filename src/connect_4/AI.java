@@ -4,7 +4,8 @@ import java.util.*;
 
 public class AI
 {
-
+    // TODO: full game board detection
+    // investigate bug where wins arent being detected on 3x3 boards
     public static String[][] makeAiMove(String[][] board, String turn, int discsNeededToWin)
     {
         String[][] bestAIMove = calculateMove(board, turn,discsNeededToWin);
@@ -92,7 +93,7 @@ public class AI
             }
         }
 
-        if (placeDiscAtRow > newBoard.length - 2) {
+        if (placeDiscAtRow > newBoard.length - 1) {
             String[][] tempBoard = Connect_4.emptyBoard(newBoard);
             return tempBoard;
         } else {
