@@ -92,7 +92,7 @@ public class AI
             }
         }
 
-        if (placeDiscAtRow > 5) {
+        if (placeDiscAtRow > newBoard.length - 2) {
             String[][] tempBoard = Connect_4.emptyBoard(newBoard);
             return tempBoard;
         } else {

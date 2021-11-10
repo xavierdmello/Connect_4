@@ -30,32 +30,25 @@ public class Connect_4
             if (menuChoice == 1) {
                 startGame(numRows, numColumns, gameMode, discsNeededToWin);
             }
-            // View Leaderboard
-            else if (menuChoice == 2) {
-                // TODO: Change "win streaks" to leaderboard instead
-            }
             // Exit
-            else if (menuChoice == 4) {
+            else if (menuChoice == 3) {
                 return;
             }
             // Change Game Mode
-            else if (menuChoice == 5) {
+            else if (menuChoice == 4) {
                 gameMode = changeGameMode();
             }
             // Change Board Width
-            else if (menuChoice == 6) {
+            else if (menuChoice == 5) {
                 numColumns = changeBoardWidth(numColumns);
             }
             // Change Board Height
-            else if (menuChoice == 7) {
+            else if (menuChoice == 6) {
                 numRows = changeBoardHeight(numRows);
             }
             // Change number of discs-in-a-row needed to win
-            else if (menuChoice == 8) {
+            else if (menuChoice == 7) {
                 discsNeededToWin = changeDiscsNeededToWin(numRows, numColumns, discsNeededToWin);
-            }
-            else {
-                System.out.println("Error");
             }
         } // end program loop
     } // end main()
@@ -70,13 +63,13 @@ public class Connect_4
         // Get number discs-in-a-row needed to win (with error checking)
         while (true) {
             try {
-                System.out.println("|| Change Number of Discs-In-a-Row Needed to Win ||\nCurrent: " + discsNeededToWin + " Discs.\nEnter a new value: ");
+                System.out.println("\n|| Change Number of Discs-In-a-Row Needed to Win ||\nCurrent: " + discsNeededToWin + " Discs.\nEnter a new value: ");
                 int tempDiscsNeededToWin = myInput.nextInt();
 
                 if (tempDiscsNeededToWin > numRows) {
-                    System.out.println("Invalid Input. Please enter a value smaller than " + numRows+ ".");
+                    System.out.println("Your board is only " + numRows+ " rows tall. Please enter a smaller number of discs.");
                 } else if (tempDiscsNeededToWin > numColumns) {
-                    System.out.println("Invalid Input. Please enter a value smaller than " + numColumns + ".");
+                    System.out.println("Your board is only " + numColumns + " columns wide. Please enter a smaller number of discs.");
                 } else if (tempDiscsNeededToWin < 1) {
                     System.out.println("Invalid Input.");
                 } else {
@@ -102,25 +95,25 @@ public class Connect_4
 
         while (true) {
             try {
-                System.out.println("|| Connect " + discsNeededToWin + " ||");
-                System.out.println("1: Start Game\n2: View Leaderboard\n3: Change Settings\n4: Exit");
-                System.out.println("\nEnter your choice: ");
+                System.out.println("\n|| Connect " + discsNeededToWin + " ||");
+                System.out.println("1: Start Game\n2: Change Settings\n3: Exit");
+                System.out.println("Enter your choice: ");
                 menuChoice = myInput.nextInt();
 
-                if (menuChoice == 3) {
+                if (menuChoice == 2) {
 
                     while (true) {
                         try {
-                            System.out.println("|| Settings ||");
+                            System.out.println("\n|| Settings ||");
                             System.out.println("1: Change Game Mode\n2: Change Board Width\n3: Change Board Height\n4: Change number of discs-in-a-row needed to win\n5: Go back");
-                            System.out.println("\nEnter your choice: ");
+                            System.out.println("Enter your choice: ");
 
-                            menuChoice = myInput.nextInt() + 4;
+                            menuChoice = myInput.nextInt() + 3;
 
-                            if (menuChoice < 5 || menuChoice > 9) {
+                            if (menuChoice < 4 || menuChoice > 8) {
                                 System.out.println("Invalid Input.");
                             }
-                            else if (menuChoice == 9) {
+                            else if (menuChoice == 8) {
                                 break;
                             }
                             else {
@@ -132,7 +125,7 @@ public class Connect_4
                         }
                     }
                 }
-                else if (menuChoice > 4 || menuChoice < 1) {
+                else if (menuChoice > 3 || menuChoice < 1) {
                     System.out.println("Invalid Input.");
                 }
                 else {
@@ -157,12 +150,17 @@ public class Connect_4
         // Get game mode from user (with error checking)
         while (true) {
             try {
-                System.out.println("|| Choose a Game Mode ||\n1: Player vs. Player\n2: Player vs. Computer\n\nEnter your choice:");
+                System.out.println("\n|| Choose a Game Mode ||\n1: Player vs. Player\n2: Player vs. Computer\nEnter your choice:");
                 gameMode = myInput.nextInt();
 
                 if (gameMode > 2 || gameMode < 1) {
                     System.out.println("Invalid Input.");
                 } else {
+                    if (gameMode == 1) {
+                        System.out.println("Gamemode set to Player vs. Player.");
+                    } else {
+                        System.out.println("Gamemode set to Player vs. Computer.");
+                    }
                     break;
                 }
             }
@@ -183,14 +181,16 @@ public class Connect_4
         // Get number of columns from user (with error checking)
         while (true) {
             try {
-                System.out.println("|| Choose Board Width ||\nCurrent Board Width: " + numColumns + " Columns.\nEnter a New Board Width: ");
-                numColumns = myInput.nextInt();
+                System.out.println("\n|| Choose Board Width ||\nCurrent Board Width: " + numColumns + " Columns\nEnter a New Board Width: ");
+                int tempNumColumns = myInput.nextInt();
 
-                if (numColumns > 9) {
+                if (tempNumColumns > 9) {
                     System.out.println("The maximum board size is 9x9");
                 } else if (numColumns < 1) {
                     System.out.println("You can't make a board this small!");
                 } else {
+                    numColumns = tempNumColumns;
+                    System.out.println("New Board Width: " + numColumns + " Columns");
                     break;
                 }
             }
@@ -211,14 +211,16 @@ public class Connect_4
         // Get number of columns from user (with error checking)
         while (true) {
             try {
-                System.out.println("|| Choose Board Width ||\nCurrent Board Width: " + numRows + " Rows.\nEnter a New Board Width: ");
-                numRows = myInput.nextInt();
+                System.out.println("\n|| Choose Board Height ||\nCurrent Board Height: " + numRows + " Rows\nEnter a New Board Height: ");
+                int tempNumRows = myInput.nextInt();
 
-                if (numRows > 9) {
+                if (tempNumRows > 9) {
                     System.out.println("The maximum board size is 9x9");
                 } else if (numRows < 1) {
                     System.out.println("You can't make a board this small!");
                 } else {
+                    numRows = tempNumRows;
+                    System.out.println("New Board Height: " + numRows + " Rows");
                     break;
                 }
             }
@@ -233,11 +235,6 @@ public class Connect_4
     public static void startGame(int numRows, int numColumns, int gameMode, int discsNeededToWin) throws InterruptedException {
 
         // Init variables
-        int p1WinStreak = 0;
-        int p2WinStreak = 0;
-        int cpuWinStreak = 0;
-        String p1Character = "";
-        String p2Character = "";
         String cpuCharacter = "";
         String turn = "X";
         String winner = "none";
@@ -248,12 +245,10 @@ public class Connect_4
             gameMode = changeGameMode();
         }
 
-        // Get who each player is playing as
-        Object[] settings = selectPlayers();
-        p1Character = (String)(settings[0]);
-        p2Character = (String)(settings[1]);
+        // Player can choose who they want to be (X or O) if they are playing a PvCPU game.
+        // Get Player choice and set CPU choice opposite to that. Ex: if Player = O --> CPU = X.
         if (gameMode == 2) {
-            cpuCharacter = (String)(settings[2]);
+            cpuCharacter = selectPlayer();
         }
 
         // Empty game board
@@ -264,46 +259,37 @@ public class Connect_4
 
         // Main gameplay loop
         while (!winner.equals("X") && !winner.equals("O")) {
+            printBoard(board, discsNeededToWin);
             if (turn.equals("X")) {
                 if (cpuCharacter.equals("X")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
-                } else {
-                    printBoard(board, discsNeededToWin);
+                    System.out.println("CPU is Calculating Move...");
+                    Thread.sleep(2000);
+                }
+                else {
                     board = placeDisc(board, gameMode, turn);
                 }
                 turn = "O";
             } else {
                 if (cpuCharacter.equals("O")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
-                } else {
-                    printBoard(board, discsNeededToWin);
+                    System.out.println("CPU is Calculating Move...");
+                    Thread.sleep(2000);
+                }
+                else {
                     board = placeDisc(board, gameMode, turn);
                 }
                 turn = "X";
             }
-
+            // Check if there is a winner after each round
             winner = checkIfWin(board, discsNeededToWin);
-        }
+        } // end main gameplay loop
 
         // Print final winning board
         printBoard(board, discsNeededToWin);
-        // Determine winner and display any win streaks
-        if (p1Character.equals(winner)) {
-            System.out.println("Congratulations! Player 1 Wins!");
-            p1WinStreak++;
-            p2WinStreak = 0;
-            cpuWinStreak = 0;
-        } else if (p2Character.equals(winner)) {
-            System.out.println("Congratulations! Player 2 Wins!");
-            p2WinStreak++;
-            p1WinStreak = 0;
-            cpuWinStreak = 0;
-        } else {
-            System.out.println("CPU Wins. Womp, womp.");
-            cpuWinStreak++;
-            p1WinStreak = 0;
-            p2WinStreak = 0;
-        }
+
+        // Print winner
+        System.out.println(winner + " Wins!");
 
         // Convert game length in nanoseconds to game length in seconds
         secondsTimer = (System.nanoTime() - secondsTimer) / 1_000_000_000;
@@ -321,14 +307,8 @@ public class Connect_4
         } else {
             System.out.println("Game length: " + minutesTimer + " minutes and " + (secondsTimer % 60) + " seconds.");
         }
-        System.out.println();
         Thread.sleep(2000);
-
-        // Print win streaks
-//        Thread.sleep(2000);
-//        printWinStreaks(p1Win2Streak, p2WinStreak, cpuWinStreak);
-//        Thread.sleep(2000);
-    }
+    } // end startGame()
 
     // Prints out Connect 4 board
     public static void printBoard(String[][] board, int discsNeededToWin)
@@ -336,13 +316,6 @@ public class Connect_4
         // Print title and column numbers
         System.out.println("\n|-----Connect " + discsNeededToWin + "-----|");
 
-        // TODO: Remove following debug code
-//        int xHighestScoreInBoard = AI.calculateCookies(board,"X", discsNeededToWin);
-//        System.out.println("X's highest score in board: " + xHighestScoreInBoard);
-//        int oHighestScoreInBoard = AI.calculateCookies(board,"O", discsNeededToWin);
-//        System.out.println("O's highest score in board: " + oHighestScoreInBoard);
-
-        System.out.println();
         for (int i = 0; i < board[0].length; i++) {
             System.out.print(" " + (i+1) + " ");
         }
@@ -378,29 +351,27 @@ public class Connect_4
         return board;
     } // end emptyBoard()
 
+    // Only for PvCPU games.
     // Asks user for who they want to play as ('X' or 'O')
-    // Returns their choices as an object
-    public static Object[] selectPlayers()
+    // Returns cpuCharacter (returning player character as well is redundant)
+    public static String selectPlayer()
     {
         // Init variables
         Scanner myInput = new Scanner(System.in);
-        String p1Character = "";
-        String p2Character = "";
+        String playerCharacter = "";
         String cpuCharacter = "";
 
         // Get who user wants to play as ('X' or 'O)
         while (true) {
-            System.out.println("Player 1,\nDo you want to be 'X' (go first) or 'O' (go second)?");
-            p1Character = myInput.next().toUpperCase();
+            System.out.println("Do you want to play as X or O? (X/O)");
+            playerCharacter = myInput.next().toUpperCase();
 
-            if (p1Character.equals("X")) {
-                System.out.println("Player 1 is 'X' and the other player is 'O'.");
-                p2Character = "O";
+            if (playerCharacter.equals("X")) {
+                System.out.println("Player is X and CPU is O.");
                 cpuCharacter = "O";
                 break;
-            } else if (p1Character.equals("O")) {
-                System.out.println("Player 1 is 'O' and the other player is 'X'.");
-                p2Character = "X";
+            } else if (playerCharacter.equals("O")) {
+                System.out.println("Player is O and CPU is X.");
                 cpuCharacter = "X";
                 break;
             } else {
@@ -408,15 +379,8 @@ public class Connect_4
             }
         } // end "get who user wants to play as" loop
 
-        Object[] settings = {p1Character, p2Character, cpuCharacter};
-        return settings;
+        return cpuCharacter;
     } // end getGameMode()
-
-    // Print leaderboard (if there is one)
-    public static void printLeaderboard(String[][] leaderboard)
-    {
-
-    } // end printWinStreaks()
 
     // Ask for choice and place disc in board
     // Returns updated board
@@ -465,8 +429,6 @@ public class Connect_4
 
         return board;
     } // end placeDisc()
-
-
 
     // Check if anybody has won
     // Returns winner (or an empty string if there is no winner)
