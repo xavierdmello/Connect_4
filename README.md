@@ -4,7 +4,7 @@ Over-engineered version of Connect 4.
 # Features
 - Player vs. Player or Player vs. CPU
 - Customizable board dimensions
-- Customazable amount of discs-in-a-row needed to win (ex: Connect 5, Connect 3)
+- Customizable amount of discs-in-a-row needed to win (ex: Connect 5, Connect 3)
 - The title centers itself over the Connect 4 board. How cool is that?
 
 # Instructions
