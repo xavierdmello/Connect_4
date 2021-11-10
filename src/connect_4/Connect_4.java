@@ -269,7 +269,7 @@ public class Connect_4
 
             if (turn.equals("X")) {
                 if (cpuCharacter == "X") {
-                    board = AI.placeDisc(board, turn, discsNeededToWin);
+                    board = AI.makeAiMove(board, turn, discsNeededToWin);
                     turn = "O";
                 } else {
                     board = placeDisc(board, gameMode, turn);
@@ -277,7 +277,7 @@ public class Connect_4
                 }
             } else {
                 if (cpuCharacter == "O") {
-                    board = AI.placeDisc(board, turn, discsNeededToWin);
+                    board = AI.makeAiMove(board, turn, discsNeededToWin);
                     turn = "X";
                 } else {
                     board = placeDisc(board, gameMode, turn);
@@ -338,10 +338,10 @@ public class Connect_4
         System.out.println("\n|-----Connect " + discsNeededToWin + "-----|");
 
         // TODO: Remove following debug code
-        int xHighestScoreInBoard = AI.calculateHighestScoreInBoard(board,"X", discsNeededToWin);
-        System.out.println("X's highest score in board: " + xHighestScoreInBoard);
-        int oHighestScoreInBoard = AI.calculateHighestScoreInBoard(board,"O", discsNeededToWin);
-        System.out.println("O's highest score in board: " + oHighestScoreInBoard);
+//        int xHighestScoreInBoard = AI.calculateCookies(board,"X", discsNeededToWin);
+//        System.out.println("X's highest score in board: " + xHighestScoreInBoard);
+//        int oHighestScoreInBoard = AI.calculateCookies(board,"O", discsNeededToWin);
+//        System.out.println("O's highest score in board: " + oHighestScoreInBoard);
 
         System.out.println();
         for (int i = 0; i < board[0].length; i++) {
@@ -467,10 +467,7 @@ public class Connect_4
         return board;
     } // end placeDisc()
 
-    public static String[][] calculatePieceFall(String[][] board, int gameMode, String turn)
-    {
 
-    }
 
     // Check if anybody has won
     // Returns winner (or an empty string if there is no winner)
