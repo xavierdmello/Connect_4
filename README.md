@@ -15,7 +15,7 @@ It chooses the best move based on a reward system: whichever move will give it t
 
 It's not the best thing ever, but I wanted to think of an AI by myself - and I suceeded in that goal!
 
-- It's modular, so you can add ways to make it better by giving the AI iceCream for a good move.
+- It's modular, so you can add ways to make it better by giving the AI more `iceCream` for a good move.
 - It'll calculate the best move one step in the future.
 - It will always win if it immediately can.
 - It will block you if you try and pull a quick one, but it won't detect any setups.
