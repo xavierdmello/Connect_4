@@ -4,8 +4,6 @@ import java.util.*;
 
 public class AI
 {
-    // TODO: full game board detection
-    // investigate bug where wins arent being detected on 3x3 boards
     public static String[][] makeAiMove(String[][] board, String turn, int discsNeededToWin)
     {
         String[][] bestAIMove = calculateMove(board, turn,discsNeededToWin);
@@ -102,7 +100,6 @@ public class AI
         }
     }
 
-
     // Calculate how much iceCream to offer AI.
     // The AI will do whatever move gives it the most iceCream.
     // Rules:
@@ -128,7 +125,6 @@ public class AI
 
                 // Modification of winner checking algorithm from Connect_4 class
                 // TODO: Update this comment with correct class if I refactor it later
-
 
                 // Check horizontals for wins
                 try {
@@ -176,7 +172,7 @@ public class AI
                 try {
                     int discsInARowSoFar = 0;
                     for (int j = 0; j < discsNeededToWin; j++) {
-                        if (testBoard[row - j][column - j].equals(playerToCheck)) {
+                        if (testBoard[row + j][column - j].equals(playerToCheck)) {
                             discsInARowSoFar++;
                         }
                     }

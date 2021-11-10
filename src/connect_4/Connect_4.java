@@ -493,7 +493,7 @@ public class Connect_4
                     try {
                         int discsInARowSoFar = 0;
                         for (int j = 0; j < discsNeededToWin; j++) {
-                            if (board[row - j][column - j].equals(playerToCheck)) {
+                            if (board[row + j][column - j].equals(playerToCheck)) {
                                 discsInARowSoFar++;
                             }
                         }
