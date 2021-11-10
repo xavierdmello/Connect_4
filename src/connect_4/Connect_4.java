@@ -311,6 +311,7 @@ public class Connect_4
 
                 // If it's the CPU's turn:
                 if (cpuCharacter.equals("X")) {
+                    // Get CPU's move
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
                     System.out.println("CPU is Calculating Move...");
                     Thread.sleep(2000);
@@ -318,6 +319,7 @@ public class Connect_4
 
                 // If it's a player's turn:
                 else {
+                    // Get player's move
                     board = placeDisc(board, turn);
                 }
 
@@ -329,12 +331,14 @@ public class Connect_4
 
                 // If it's the CPU's turn:
                 if (cpuCharacter.equals("O")) {
+                    // Get CPU's move
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
                     System.out.println("CPU is Calculating Move...");
                     Thread.sleep(2000);
                 }
                 // If it's a player's turn:
                 else {
+                    // Get player's move
                     board = placeDisc(board, turn);
                 }
 
