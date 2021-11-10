@@ -4,29 +4,51 @@ import java.util.*;
 
 public class AI
 {
-    // Ask for choice and place disc in board
-    // Returns updated board
+
     public static String[][] makeAiMove(String[][] board, String turn, int discsNeededToWin)
     {
+        String[][] bestAIMove = calculateMove(board, turn,discsNeededToWin);
+
+        // Make sure that the player can't win next move.
+        // If they can win next move, block them.
+        String[][] bestPlayerMove;
+        if (turn.equals("X")) {
+            bestPlayerMove = calculateMove(board, "O",discsNeededToWin);
+        } else {
+            bestPlayerMove = calculateMove(board, "X",discsNeededToWin);
+        }
+        String willPlayerWin = Connect_4.checkIfWin(bestPlayerMove, discsNeededToWin);
+        boolean doesEnemyWin = false;
+        if (turn.equals("X") && willPlayerWin.equals("O") || turn.equals("O") && willPlayerWin.equals("X")) {
+            doesEnemyWin = true;
+        }
+        if (doesEnemyWin == true) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                    if (!board[i][j].equals(bestPlayerMove[i][j])) {
+                        bestAIMove = Arrays.stream(board).map(String[]::clone).toArray(String[][]::new);
+                        bestAIMove[i][j] = turn;
+                    }
+                }
+            }
+        }
+
+        // If player move was blocked, return that blocked move. Otherwise, return the calculated move.
+        return bestAIMove;
+    }
+
+    // Ask for choice and place disc in board
+    // Returns updated board
+    public static String[][] calculateMove(String[][] board, String turn, int discsNeededToWin)
+    {
+        String[][] newBoard = Arrays.stream(board).map(String[]::clone).toArray(String[][]::new);
         Random rn = new Random();
         boolean betterMoveFound = false;
 
         ArrayList<Board> boards = new ArrayList<Board>();
-        for (int columnToCheck = 0; columnToCheck < board[0].length; ++columnToCheck) {
-            try {
-                boards.add(new Board(placeDisc(board,turn,columnToCheck), calculateCookies(placeDisc(board,turn,columnToCheck),turn,discsNeededToWin)));
-            } catch (ArrayIndexOutOfBoundsException e) {
-                // If the disc would overflow the board, move on to the next column.
-                // I know this is cursed, but hey, it works, is predictable, and is easy to understand.
-            }
+        for (int columnToCheck = 0; columnToCheck < newBoard[0].length; ++columnToCheck) {
+                boards.add(new Board(placeDisc(newBoard,turn,columnToCheck), calculateCookies(placeDisc(newBoard,turn,columnToCheck),turn,discsNeededToWin)));
         }
-
-//        // TODO: Remove following debug code:
-//        for (int i = 0; i < boards.size(); i++) {
-//            System.out.println("Board #" + i + "; Score: " + boards.get(i).score);
-//            Connect_4.printBoard(boards.get(i).board, discsNeededToWin);
-//            System.out.println("-----------");
-//        }
 
         ArrayList<Integer> indicesOfHighestScoresSoFar = new ArrayList<Integer>();
         int indexHighestScoreSoFar = 0;
@@ -44,10 +66,12 @@ public class AI
             }
         }
 
+        // Choose a good move from the list of good moves.
         if (betterMoveFound == true) {
             return boards.get(indicesOfHighestScoresSoFar.get(rn.nextInt(indicesOfHighestScoresSoFar.size()))).board;
-        } else {
-            System.out.println("No better move found, picking random spot");
+        }
+        // If there are no good moves, pick a random column to place disc.
+        else {
             return placeDisc(board, turn, rn.nextInt(6));
         }
     } // end placeDisc()
@@ -69,7 +93,8 @@ public class AI
         }
 
         if (placeDiscAtRow > 5) {
-            throw new IndexOutOfBoundsException();
+            String[][] tempBoard = Connect_4.emptyBoard(newBoard);
+            return tempBoard;
         } else {
             newBoard[placeDiscAtRow][placeDiscInColumn] = turn;
             return newBoard;
@@ -87,7 +112,6 @@ public class AI
     {
         // Init variables
         int biggestRun = 0;
-        int biggestEnemyRun = 0;
         int iceCream = 0;
         String playerToCheck = turn;
 
@@ -104,93 +128,63 @@ public class AI
                 // Modification of winner checking algorithm from Connect_4 class
                 // TODO: Update this comment with correct class if I refactor it later
 
-                // Repeat loop twice; Check AI's runs first, then check player's runs
-                for (int k = 0; k < 2; k++) {
 
-                    // Check if colour can win immediately with a horizontal run
-                    try {
-                        int discsInARowSoFar = 0;
-                        for (int j = 0; j < discsNeededToWin; j++) {
-                            if (testBoard[row][column + j].equals(playerToCheck)) {
-                                discsInARowSoFar++;
-                            }
-                            // If the streak of discs in a row is broken, break loop
-                            else {
-                                break;
-                            }
+                // Check horizontals for wins
+                try {
+                    int discsInARowSoFar = 0;
+                    for (int j = 0; j < discsNeededToWin; j++) {
+                        if (testBoard[row][column + j].equals(playerToCheck)) {
+                            discsInARowSoFar++;
                         }
-                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
-                            biggestRun = discsInARowSoFar;
-                        } else {
-                            biggestEnemyRun = discsInARowSoFar;
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {}
-
-                    // Check if colour can win immediately with a vertical run
-                    try {
-                        int discsInARowSoFar = 0;
-                        for (int j = 0; j < discsNeededToWin; j++) {
-                            if (testBoard[row + j][column].equals(playerToCheck)) {
-                                discsInARowSoFar++;
-                            }
-                            // If the streak of discs in a row is broken, break loop
-                            else {
-                                break;
-                            }
-                        }
-                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
-                            biggestRun = discsInARowSoFar;
-                        } else {
-                            biggestEnemyRun = discsInARowSoFar;
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {}
-
-                    // Check if colour can win immediately with a left diagonal run
-                    try {
-                        int discsInARowSoFar = 0;
-                        for (int j = 0; j < discsNeededToWin; j++) {
-                            if (testBoard[row + j][column + j].equals(playerToCheck)) {
-                                discsInARowSoFar++;
-                            }
-                            // If the streak of discs in a row is broken, break loop
-                            else {
-                                break;
-                            }
-                        }
-                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
-                            biggestRun = discsInARowSoFar;
-                        } else {
-                            biggestEnemyRun = discsInARowSoFar;
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {}
-
-                    // Check if colour can win immediately with a right diagonal run
-                    try {
-                        int discsInARowSoFar = 0;
-                        for (int j = 0; j < discsNeededToWin; j++) {
-                            if (testBoard[row - j][column - j].equals(playerToCheck)) {
-                                discsInARowSoFar++;
-                            }
-                            // If the streak of discs in a row is broken, break loop
-                            else {
-                                break;
-                            }
-                        }
-                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
-                            biggestRun = discsInARowSoFar;
-                        } else {
-                            biggestEnemyRun = discsInARowSoFar;
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {}
-
-                    // Swap playerToCheck to check for the player's runs on the second iteration of this for loop
-                    if (playerToCheck.equals("X")) {
-                        playerToCheck = "O";
-                    } else {
-                        playerToCheck = "X";
                     }
-                }
+                    if (discsInARowSoFar == discsNeededToWin) {
+                        // If somebody wins, print the final state of the board, then return the winner
+                        iceCream = iceCream + 999;
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {}
 
+                // Check verticals for wins
+                try {
+                    int discsInARowSoFar = 0;
+                    for (int j = 0; j < discsNeededToWin; j++) {
+                        if (testBoard[row + j][column].equals(playerToCheck)) {
+                            discsInARowSoFar++;
+                        }
+                    }
+                    if (discsInARowSoFar == discsNeededToWin) {
+                        // If somebody wins, print the final state of the board, then return the winner
+                        iceCream = iceCream + 999;
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+
+                // Check left diagonals for wins
+                try {
+                    int discsInARowSoFar = 0;
+                    for (int j = 0; j < discsNeededToWin; j++) {
+                        if (testBoard[row + j][column + j].equals(playerToCheck)) {
+                            discsInARowSoFar++;
+                        }
+                    }
+                    if (discsInARowSoFar == discsNeededToWin) {
+                        // If somebody wins, print the final state of the board, then return the winner
+                        iceCream = iceCream + 999;
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {}
+
+                // Check right diagonals for wins
+                try {
+                    int discsInARowSoFar = 0;
+                    for (int j = 0; j < discsNeededToWin; j++) {
+                        if (testBoard[row - j][column - j].equals(playerToCheck)) {
+                            discsInARowSoFar++;
+                        }
+                    }
+                    if (discsInARowSoFar == discsNeededToWin) {
+                        // TODO: update commenting in this area
+                        // If somebody wins, print the final state of the board, then return the winner
+                        iceCream = iceCream + 999;
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {}
 
                 // Give +1 iceCream for each chip every chip is adjacent to
                 if (testBoard[row][column].equals(playerToCheck)) {
@@ -250,15 +244,6 @@ public class AI
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
                 } // end adjacent disc iceCream reward if statement
-
-                // If AI can win immediately, give lots of iceCream
-                if (biggestRun == discsNeededToWin) {
-                    iceCream = iceCream + 999;
-                }
-                // If player can win immediately, give slightly less iceCream
-                if (biggestEnemyRun == discsNeededToWin) {
-                    iceCream = iceCream + 750;
-                }
             } // end checks on respective columns in rows of board
         } // end checks on rows of board
 

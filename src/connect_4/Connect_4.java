@@ -264,30 +264,29 @@ public class Connect_4
 
         // Main gameplay loop
         while (!winner.equals("X") && !winner.equals("O")) {
-            printBoard(board, discsNeededToWin);
-            System.out.println(cpuCharacter);
-
             if (turn.equals("X")) {
                 if (cpuCharacter.equals("X")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
-                    turn = "O";
                 } else {
+                    printBoard(board, discsNeededToWin);
                     board = placeDisc(board, gameMode, turn);
-                    turn = "O";
                 }
+                turn = "O";
             } else {
                 if (cpuCharacter.equals("O")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
-                    turn = "X";
                 } else {
+                    printBoard(board, discsNeededToWin);
                     board = placeDisc(board, gameMode, turn);
-                    turn = "X";
                 }
+                turn = "X";
             }
 
             winner = checkIfWin(board, discsNeededToWin);
         }
 
+        // Print final winning board
+        printBoard(board, discsNeededToWin);
         // Determine winner and display any win streaks
         if (p1Character.equals(winner)) {
             System.out.println("Congratulations! Player 1 Wins!");
@@ -495,13 +494,10 @@ public class Connect_4
                             }
                         }
                         if (discsInARowSoFar == discsNeededToWin) {
-                            // If somebody wins, print the final state of the board, then return the winner
-                            printBoard(board, discsNeededToWin);
+                            // If somebody wins return the winner
                             return playerToCheck;
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-
-                    }
+                    } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // Check verticals for wins
                     try {
@@ -512,13 +508,10 @@ public class Connect_4
                             }
                         }
                         if (discsInARowSoFar == discsNeededToWin) {
-                            // If somebody wins, print the final state of the board, then return the winner
-                            printBoard(board, discsNeededToWin);
+                            // If somebody wins return the winner
                             return playerToCheck;
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-
-                    }
+                    } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // Check left diagonals for wins
                     try {
@@ -529,13 +522,10 @@ public class Connect_4
                             }
                         }
                         if (discsInARowSoFar == discsNeededToWin) {
-                            // If somebody wins, print the final state of the board, then return the winner
-                            printBoard(board, discsNeededToWin);
+                            // If somebody wins return the winner
                             return playerToCheck;
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-
-                    }
+                    } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // Check right diagonals for wins
                     try {
@@ -546,13 +536,10 @@ public class Connect_4
                             }
                         }
                         if (discsInARowSoFar == discsNeededToWin) {
-                            // If somebody wins, print the final state of the board, then return the winner
-                            printBoard(board, discsNeededToWin);
+                            // If somebody wins return the winner
                             return playerToCheck;
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-
-                    }
+                    } catch (ArrayIndexOutOfBoundsException e) {}
                 } // end checks on respective columns in rows of board
             } // end checks on rows of board
 
