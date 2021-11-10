@@ -263,12 +263,12 @@ public class Connect_4
         long secondsTimer = System.nanoTime();
 
         // Main gameplay loop
-        while (winner != "X" && winner != "O") {
+        while (!winner.equals("X") && !winner.equals("O")) {
             printBoard(board, discsNeededToWin);
             System.out.println(cpuCharacter);
 
             if (turn.equals("X")) {
-                if (cpuCharacter == "X") {
+                if (cpuCharacter.equals("X")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
                     turn = "O";
                 } else {
@@ -276,7 +276,7 @@ public class Connect_4
                     turn = "O";
                 }
             } else {
-                if (cpuCharacter == "O") {
+                if (cpuCharacter.equals("O")) {
                     board = AI.makeAiMove(board, turn, discsNeededToWin);
                     turn = "X";
                 } else {

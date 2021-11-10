@@ -119,7 +119,7 @@ public class AI
                                 break;
                             }
                         }
-                        if (discsInARowSoFar > biggestRun && playerToCheck == turn) {
+                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
                             biggestRun = discsInARowSoFar;
                         } else {
                             biggestEnemyRun = discsInARowSoFar;
@@ -138,7 +138,7 @@ public class AI
                                 break;
                             }
                         }
-                        if (discsInARowSoFar > biggestRun && playerToCheck == turn) {
+                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
                             biggestRun = discsInARowSoFar;
                         } else {
                             biggestEnemyRun = discsInARowSoFar;
@@ -157,7 +157,7 @@ public class AI
                                 break;
                             }
                         }
-                        if (discsInARowSoFar > biggestRun && playerToCheck == turn) {
+                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
                             biggestRun = discsInARowSoFar;
                         } else {
                             biggestEnemyRun = discsInARowSoFar;
@@ -176,7 +176,7 @@ public class AI
                                 break;
                             }
                         }
-                        if (discsInARowSoFar > biggestRun && playerToCheck == turn) {
+                        if (discsInARowSoFar > biggestRun && playerToCheck.equals(turn)) {
                             biggestRun = discsInARowSoFar;
                         } else {
                             biggestEnemyRun = discsInARowSoFar;
@@ -184,7 +184,7 @@ public class AI
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // Swap playerToCheck to check for the player's runs on the second iteration of this for loop
-                    if (playerToCheck == "X") {
+                    if (playerToCheck.equals("X")) {
                         playerToCheck = "O";
                     } else {
                         playerToCheck = "X";
@@ -193,59 +193,59 @@ public class AI
 
 
                 // Give +1 iceCream for each chip every chip is adjacent to
-                if (testBoard[row][column] == playerToCheck) {
+                if (testBoard[row][column].equals(playerToCheck)) {
                     // If disc above
                     try {
-                        if (testBoard[row + 1][column] == playerToCheck) {
+                        if (testBoard[row + 1][column].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // If disc to top right
                     try {
-                        if (testBoard[row  + 1][column + 1] == playerToCheck) {
+                        if (testBoard[row  + 1][column + 1].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // If disc to right
                     try {
-                        if (testBoard[row][column + 1] == playerToCheck) {
+                        if (testBoard[row][column + 1].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // If disc to bottom right
                     try {
-                        if (testBoard[row - 1][column + 1] == playerToCheck) {
+                        if (testBoard[row - 1][column + 1].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // If disc below
                     try {
-                        if (testBoard[row - 1][column] == playerToCheck) {
+                        if (testBoard[row - 1][column].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // If disc to bottom right
                     try {
-                        if (testBoard[row - 1][column - 1] == playerToCheck) {
+                        if (testBoard[row - 1][column - 1].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // If disc to left
                     try {
-                        if (testBoard[row][column - 1] == playerToCheck) {
+                        if (testBoard[row][column - 1].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
 
                     // If disc to top left
                     try {
-                        if (testBoard[row + 1][column - 1] == playerToCheck) {
+                        if (testBoard[row + 1][column - 1].equals(playerToCheck)) {
                             iceCream = iceCream + 1;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}
