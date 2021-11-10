@@ -1,3 +1,25 @@
+/*  Name: Xavier D'Mello
+ *  Course: ICS 3U
+ *  Teacher: Mrs. McCaffery
+ *  Date: November 10th, 2021
+ *  Description: AI for the Connect 4 class.
+ *               The AI has 4 decisions, in this order.:
+ *               1. if (AI can win this round): Win.
+ *               2. else if (player can win this round): Block player.
+ *               3. else if (move places disc close to other discs): Place disc close to other discs.
+ *               4. else: Place disc in random column.
+ *
+ *               The AI LOVES LOVES LOVES iceCream. iceCream is added to each good move.
+ *               Better moves will reward the AI with more iceCream.
+ *               Using this system, the AI will do the best move - whatever move gives it the most iceCream.
+ *
+ *               Code to copy 2D array borrowed from Stackoverflow:
+ *               Arrays.stream(board).map(String[]::clone).toArray(String[][]::new)
+ *               https://stackoverflow.com/questions/23079003/how-to-convert-a-java-8-stream-to-an-array
+ *
+ *               All other code in this program is my own. I had a lot of fun building this AI!
+ */
+
 package connect_4;
 
 import java.util.*;
@@ -6,31 +28,42 @@ public class AI
 {
     public static String[][] makeAiMove(String[][] board, String turn, int discsNeededToWin)
     {
+        // Get what the AI thinks is its best move:
         String[][] bestAIMove = calculateMove(board, turn,discsNeededToWin);
 
-        // Make sure that the player can't win next move.
-        // If they can win next move, block them.
+        // Get what the AI thinks is the player's best move:
         String[][] bestPlayerMove;
         if (turn.equals("X")) {
+            // If the AI is X, get the Player's move (O)
             bestPlayerMove = calculateMove(board, "O",discsNeededToWin);
-        } else {
+        }
+        else {
+            // If the AI is O, get the Player's move (X)
             bestPlayerMove = calculateMove(board, "X",discsNeededToWin);
         }
-        String willPlayerWin = Connect_4.checkIfWin(bestPlayerMove, discsNeededToWin);
+
+        // Check if enemy's best move means that it wins:
         boolean doesEnemyWin = false;
+        String willPlayerWin = Connect_4.checkIfWin(bestPlayerMove, discsNeededToWin);
         if (turn.equals("X") && willPlayerWin.equals("O") || turn.equals("O") && willPlayerWin.equals("X")) {
             doesEnemyWin = true;
         }
+
+        // If enemy can win next round, block them:
+        // Find where enemy can place their disc to win by iterating through each cell of the "winning" board.
         if (doesEnemyWin == true) {
+            // Iterate through each row:
             for (int i = 0; i < board.length; i++) {
+                // Iterate through each column:
                 for (int j = 0; j < board[0].length; j++) {
+                    // If "winning" enemy move is found, then place disc there to block them.
                     if (!board[i][j].equals(bestPlayerMove[i][j])) {
                         bestAIMove = Arrays.stream(board).map(String[]::clone).toArray(String[][]::new);
                         bestAIMove[i][j] = turn;
                     }
-                }
-            }
-        }
+                } // end column iterator
+            } // end row iterator
+        } // end "Find where enemy can place their disc to win" loop
 
         // If player move was blocked, return that blocked move. Otherwise, return the calculated move.
         return bestAIMove;
