@@ -220,8 +220,8 @@ public class Connect_4
 
                 if (tempNumColumns > 9) {
                     System.out.println("The maximum board size is 9x9");
-                } else if (numColumns < 1) {
-                    System.out.println("You can't make a board this small!");
+                } else if (tempNumColumns < 3) {
+                    System.out.println("The minimum board size is 3x3");
                 } else {
                     numColumns = tempNumColumns;
                     System.out.println("New Board Width: " + numColumns + " Columns");
@@ -235,7 +235,6 @@ public class Connect_4
         }
         return numColumns;
     } // end changeBoardWidth()
-
 
     /* Method Name: changeBoardHeight
      * Description: Changes Board Height (num of rows)
@@ -254,8 +253,8 @@ public class Connect_4
 
                 if (tempNumRows > 9) {
                     System.out.println("The maximum board size is 9x9");
-                } else if (numRows < 1) {
-                    System.out.println("You can't make a board this small!");
+                } else if (tempNumRows < 3) {
+                    System.out.println("The minimum board size is 3x3");
                 } else {
                     numRows = tempNumRows;
                     System.out.println("New Board Height: " + numRows + " Rows");
@@ -382,8 +381,22 @@ public class Connect_4
      */
     public static void printBoard(String[][] board, int discsNeededToWin)
     {
-        // Print title
-        System.out.println("\n|---------Connect " + discsNeededToWin + "---------|");
+        // Prints Title CENTERED to Board - veryyyyy prettyyyyyy (* ^ ω ^)
+        // Total width of board = width of board with all the columns and formatting
+        int totalWidthOfBoard = (board[0].length * 4);
+        // Characters in "Connect 4" = 9.
+        // Print half of (width - 9) dashes on each side of the title to center it.
+        System.out.print("|");
+        for (int i = 0; i < (totalWidthOfBoard - 9)/2 ; i++) {
+            // dashes BEFORE the "title"
+            System.out.print("-");
+        }
+        System.out.print("Connect " + discsNeededToWin);
+        for (int i = 0; i < (totalWidthOfBoard - 9)/2; i++) {
+            // dashes AFTER the "title"
+            System.out.print("-");
+        }
+        System.out.print("|\n");
 
         // Print each row, starting from the top of the board
         for (int row = board.length - 1; row >= 0; row--) {
@@ -393,7 +406,7 @@ public class Connect_4
                 System.out.print(board[row][column] + " | ");
             }
             System.out.println();
-        }
+        } // end main row printer loop
 
         // Print column numbers
         System.out.print("  ");
