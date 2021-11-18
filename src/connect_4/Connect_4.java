@@ -526,7 +526,7 @@ public class Connect_4
             }
 
             // Check if placing disk here would overflow the column and cause the piece to fall on the floor :(
-            if (placeDiscAtRow > 5) {
+            if (placeDiscAtRow > (board[0].length - 2)) {
                 // If it will, yell at user, and repeat selection loop:
                 System.out.println("Invalid Input.");
             } else {
