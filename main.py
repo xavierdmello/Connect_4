@@ -56,20 +56,17 @@ class AI:
     @staticmethod
     def place_disc(board, turn, place_disc_in_column):
         new_board = copy.deepcopy(board)
-        place_disc_at_row = 0
 
         if place_disc_in_column > len(new_board[0]) - 1 or place_disc_in_column < 0:
             raise IndexError()
 
-        for row in range(len(new_board)):
-            if new_board[row][place_disc_in_column] != ' ':
-                place_disc_at_row = row + 1
+        for row in range(len(new_board) - 1, -1, -1):  # Start from the bottom
+            if new_board[row][place_disc_in_column] == ' ':
+                new_board[row][place_disc_in_column] = turn
+                return new_board
 
-        if place_disc_at_row > len(new_board) - 1:
-            return Connect4.empty_board(new_board)
-        else:
-            new_board[place_disc_at_row][place_disc_in_column] = turn
-            return new_board
+        # If we get here, the column is full
+        return Connect4.empty_board(new_board)
 
     @staticmethod
     def calculate_cookies(test_board, turn, discs_needed_to_win):
@@ -287,7 +284,7 @@ class Connect4:
         total_width_of_board = len(board[0]) * 4
         print("|" + "-" * ((total_width_of_board - 9) // 2) + f"Connect {discs_needed_to_win}" + "-" * ((total_width_of_board - 9) // 2) + "|")
 
-        for row in board:
+        for row in board:  # Remove 'reversed' here
             print("| " + " | ".join(row) + " |")
 
         print("  " + "   ".join(str(i + 1) for i in range(len(board[0]))) + "\n")
@@ -315,11 +312,15 @@ class Connect4:
             try:
                 place_disc_in_column = int(input(f"{turn}: Choose column to place disc in: ")) - 1
                 if 0 <= place_disc_in_column < len(board[0]):
-                    for row in range(len(board) - 1, -1, -1):
-                        if board[row][place_disc_in_column] == " ":
-                            board[row][place_disc_in_column] = turn
+                    for row in range(len(board)):
+                        if board[row][place_disc_in_column] != " ":
+                            if row == 0:
+                                print("Invalid Input.")
+                                break
+                            board[row - 1][place_disc_in_column] = turn
                             return board
-                    print("Column is full. Choose another column.")
+                    board[len(board) - 1][place_disc_in_column] = turn
+                    return board
                 else:
                     print("Invalid Input.")
             except ValueError:
